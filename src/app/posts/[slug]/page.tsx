@@ -5,7 +5,7 @@ import { ko } from 'date-fns/locale'
 import { MDXRemote } from 'next-mdx-remote/rsc'
 import type { Post } from '@/types/post'
 
-interface PageProps {
+interface Props {
   params: {
     slug: string
   }
@@ -17,7 +17,7 @@ export async function generateStaticParams() {
   }))
 }
 
-export async function generateMetadata({ params }: PageProps) {
+export async function generateMetadata({ params }: Props) {
   const post = (allPosts as Post[]).find((post) => post.slug === params.slug)
   if (!post) return {}
 
@@ -27,7 +27,7 @@ export async function generateMetadata({ params }: PageProps) {
   }
 }
 
-export default async function PostPage({ params }: PageProps) {
+export default async function PostPage({ params }: Props) {
   const post = (allPosts as Post[]).find((post) => post.slug === params.slug)
   
   if (!post) notFound()
