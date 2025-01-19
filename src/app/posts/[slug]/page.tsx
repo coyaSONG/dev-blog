@@ -5,10 +5,10 @@ import { ko } from 'date-fns/locale'
 import { MDXRemote } from 'next-mdx-remote/rsc'
 import type { Post } from '@/types/post'
 
-interface Props {
-  params: {
+type Props = {
+  params: Promise<{
     slug: string
-  }
+  }>
 }
 
 export async function generateStaticParams() {
@@ -18,7 +18,8 @@ export async function generateStaticParams() {
 }
 
 export async function generateMetadata({ params }: Props) {
-  const post = (allPosts as Post[]).find((post) => post.slug === params.slug)
+  const resolvedParams = await params
+  const post = (allPosts as Post[]).find((post) => post.slug === resolvedParams.slug)
   if (!post) return {}
 
   return {
@@ -28,7 +29,8 @@ export async function generateMetadata({ params }: Props) {
 }
 
 export default async function PostPage({ params }: Props) {
-  const post = (allPosts as Post[]).find((post) => post.slug === params.slug)
+  const resolvedParams = await params
+  const post = (allPosts as Post[]).find((post) => post.slug === resolvedParams.slug)
   
   if (!post) notFound()
   
