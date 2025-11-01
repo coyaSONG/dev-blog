@@ -1,10 +1,7 @@
-import { Inter } from "next/font/google";
 import { Metadata } from "next";
 import "./globals.css";
 import Header from "@/components/layout/Header";
 import { ThemeProvider } from "@/components/common/ThemeProvider";
-
-const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "coyaSONG",
@@ -18,7 +15,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="ko" suppressHydrationWarning>
-      <body className={`${inter.className} bg-white text-black dark:bg-gray-900 dark:text-white`}>
+      <body className="bg-white text-black dark:bg-gray-900 dark:text-white font-sans">
         <ThemeProvider>
           <Header />
           <div className="container mx-auto px-4">
