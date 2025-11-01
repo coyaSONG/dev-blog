@@ -1,10 +1,19 @@
+export interface Author {
+  name: string
+  email?: string
+  avatar?: string
+}
+
 export interface Post {
   title: string
   date: string
   description: string
   tags?: string[]
+  viewCount?: number
+  author?: Author
   slug: string
   url: string
+  readingTime: number
   body: {
     code: string
     raw: string
