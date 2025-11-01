@@ -8,6 +8,7 @@ export interface Post {
   title: string
   date: string
   description: string
+  category?: string
   tags?: string[]
   viewCount?: number
   author?: Author
