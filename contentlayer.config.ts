@@ -37,11 +37,25 @@ export const Post = defineDocumentType(() => ({
     title: { type: 'string', required: true },
     date: { type: 'date', required: true },
     description: { type: 'string', required: true },
-    tags: { 
+    tags: {
       type: 'list',
       of: { type: 'string' },
       required: false,
       default: []
+    },
+    viewCount: {
+      type: 'number',
+      required: false,
+      default: 0
+    },
+    author: {
+      type: 'nested',
+      required: false,
+      default: {
+        name: 'Anonymous',
+        email: '',
+        avatar: ''
+      }
     }
   },
   computedFields: {
@@ -52,6 +66,15 @@ export const Post = defineDocumentType(() => ({
     url: {
       type: 'string',
       resolve: (post) => `/posts/${post._raw.flattenedPath.replace(/^posts\//, '')}`
+    },
+    readingTime: {
+      type: 'number',
+      resolve: (post) => {
+        const wordsPerMinute = 200
+        const wordCount = post.body.raw.split(/\s+/g).length
+        const minutes = Math.ceil(wordCount / wordsPerMinute)
+        return minutes
+      }
     }
   }
 }))
