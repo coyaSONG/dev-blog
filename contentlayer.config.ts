@@ -49,13 +49,8 @@ export const Post = defineDocumentType(() => ({
       default: 0
     },
     author: {
-      type: 'nested',
-      required: false,
-      default: {
-        name: 'Anonymous',
-        email: '',
-        avatar: ''
-      }
+      type: 'json',
+      required: false
     }
   },
   computedFields: {
