@@ -2,6 +2,7 @@ export interface Post {
   title: string
   date: string
   description: string
+  category?: string
   tags?: string[]
   slug: string
   url: string
