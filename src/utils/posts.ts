@@ -95,3 +95,46 @@ export function searchPosts(posts: Post[], query: string): Post[] {
 export function getRecentPosts(posts: Post[], limit: number): Post[] {
   return sortPostsByDate(posts).slice(0, limit)
 }
+
+/**
+ * 관련 포스트 추천
+ * @param currentPost - 현재 포스트
+ * @param allPosts - 전체 포스트 배열
+ * @param limit - 추천할 포스트 개수
+ * @returns 유사도 순으로 정렬된 관련 포스트 배열
+ */
+export function getRelatedPosts(
+  currentPost: Post,
+  allPosts: Post[],
+  limit: number = 3
+): Post[] {
+  // 현재 포스트 제외
+  const otherPosts = allPosts.filter(post => post._id !== currentPost._id)
+
+  // 각 포스트의 유사도 계산
+  const postsWithScore = otherPosts.map(post => {
+    let score = 0
+
+    // 카테고리가 같으면 +3점
+    if (post.category === currentPost.category) {
+      score += 3
+    }
+
+    // 공통 태그 개수만큼 점수 추가
+    if (post.tags && currentPost.tags) {
+      const commonTags = post.tags.filter(tag =>
+        currentPost.tags?.includes(tag)
+      )
+      score += commonTags.length * 2
+    }
+
+    return { post, score }
+  })
+
+  // 점수순으로 정렬하고 상위 N개 반환
+  return postsWithScore
+    .filter(item => item.score > 0) // 점수가 0보다 큰 것만
+    .sort((a, b) => b.score - a.score)
+    .slice(0, limit)
+    .map(item => item.post)
+}
