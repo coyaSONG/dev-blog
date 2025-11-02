@@ -4,6 +4,13 @@ import { format, parseISO } from 'date-fns'
 import { ko } from 'date-fns/locale'
 import { MDXRemote } from 'next-mdx-remote/rsc'
 import type { Post } from '@/types/post'
+import ReadingProgress from '@/components/common/ReadingProgress'
+import SocialShare from '@/components/common/SocialShare'
+import RelatedPosts from '@/components/RelatedPosts'
+import TableOfContents from '@/components/TableOfContents'
+import { getRelatedPosts } from '@/utils/posts'
+import { extractHeadings } from '@/utils/toc'
+import { rehypeHeadingIds } from '@/utils/rehype-heading-ids'
 
 type Props = {
   params: Promise<{
@@ -83,8 +90,13 @@ export default async function PostPage({ params }: Props) {
     keywords: post.tags?.join(', '),
   }
 
+  const relatedPosts = getRelatedPosts(post, allPosts as Post[], 3)
+  const tocItems = extractHeadings(post.body.raw)
+
   return (
     <>
+      <ReadingProgress />
+      <TableOfContents items={tocItems} />
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
@@ -110,7 +122,22 @@ export default async function PostPage({ params }: Props) {
             )}
           </div>
         </div>
-        <MDXRemote source={post.body.raw} />
+        <SocialShare
+          title={post.title}
+          url={postUrl}
+          description={post.description}
+        />
+        <div className="mt-8">
+          <MDXRemote
+            source={post.body.raw}
+            options={{
+              mdxOptions: {
+                rehypePlugins: [rehypeHeadingIds],
+              },
+            }}
+          />
+        </div>
+        <RelatedPosts posts={relatedPosts} />
       </article>
     </>
   )
