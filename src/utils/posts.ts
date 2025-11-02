@@ -4,10 +4,10 @@ import { compareDesc } from 'date-fns'
 /**
  * 포스트를 날짜순으로 정렬 (최신순)
  * @param posts - 정렬할 포스트 배열
- * @returns 날짜순으로 정렬된 포스트 배열
+ * @returns 날짜순으로 정렬된 포스트 배열 (새 배열)
  */
 export function sortPostsByDate(posts: Post[]): Post[] {
-  return posts.sort((a, b) =>
+  return [...posts].sort((a, b) =>
     compareDesc(new Date(a.date), new Date(b.date))
   )
 }
