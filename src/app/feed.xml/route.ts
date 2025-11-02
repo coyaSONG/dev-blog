@@ -1,12 +1,10 @@
 import { allPosts } from 'contentlayer2/generated'
 import { siteConfig } from '@/config/site'
 import { Post } from '@/types/post'
-import { compareDesc } from 'date-fns'
+import { sortPostsByDate } from '@/utils/posts'
 
 export async function GET() {
-  const posts = (allPosts as Post[]).sort((a, b) =>
-    compareDesc(new Date(a.date), new Date(b.date))
-  )
+  const posts = sortPostsByDate(allPosts as Post[])
 
   const rssItems = posts
     .map((post) => {

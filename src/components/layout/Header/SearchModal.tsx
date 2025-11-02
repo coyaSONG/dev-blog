@@ -6,7 +6,7 @@ import { Button } from '@/components/common/Button'
 import { allPosts } from 'contentlayer2/generated'
 import type { Post } from '@/types/post'
 import Link from 'next/link'
-import { compareDesc } from 'date-fns'
+import { sortPostsByDate, searchPosts } from '@/utils/posts'
 
 interface SearchModalProps {
   isOpen: boolean
@@ -26,42 +26,12 @@ export default function SearchModal({ isOpen, onClose }: SearchModalProps) {
 
   // Sort posts by date
   const sortedPosts = useMemo(() => {
-    return (allPosts as Post[]).sort((a, b) =>
-      compareDesc(new Date(a.date), new Date(b.date))
-    )
+    return sortPostsByDate(allPosts as Post[])
   }, [])
 
   // Search logic
   const searchResults = useMemo(() => {
-    if (!searchQuery.trim()) {
-      return []
-    }
-
-    const query = searchQuery.toLowerCase().trim()
-
-    return sortedPosts.filter((post) => {
-      // Search in title
-      if (post.title.toLowerCase().includes(query)) {
-        return true
-      }
-
-      // Search in description
-      if (post.description.toLowerCase().includes(query)) {
-        return true
-      }
-
-      // Search in tags
-      if (post.tags?.some(tag => tag.toLowerCase().includes(query))) {
-        return true
-      }
-
-      // Search in content
-      if (post.body.raw.toLowerCase().includes(query)) {
-        return true
-      }
-
-      return false
-    })
+    return searchPosts(sortedPosts, searchQuery)
   }, [searchQuery, sortedPosts])
 
   const handleKeyDown = (e: React.KeyboardEvent) => {

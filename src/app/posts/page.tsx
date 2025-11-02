@@ -1,7 +1,7 @@
 import { allPosts } from 'contentlayer2/generated'
-import { compareDesc } from 'date-fns'
 import Link from 'next/link'
 import type { Post } from '@/types/post'
+import { sortPostsByDate, filterPostsByCategory, getSortedCategories } from '@/utils/posts'
 
 export const metadata = {
   title: '블로그 포스트',
@@ -17,25 +17,13 @@ export default async function PostsPage({ searchParams }: PostsPageProps) {
   const selectedCategory = params.category
 
   // 모든 포스트를 날짜순으로 정렬
-  const allSortedPosts = (allPosts as Post[]).sort((a, b) =>
-    compareDesc(new Date(a.date), new Date(b.date))
-  )
+  const allSortedPosts = sortPostsByDate(allPosts as Post[])
 
   // 카테고리 필터링
-  const posts = selectedCategory
-    ? allSortedPosts.filter(post => post.category === selectedCategory)
-    : allSortedPosts
+  const posts = filterPostsByCategory(allSortedPosts, selectedCategory)
 
-  // 카테고리별 포스트 수 계산
-  const categoryCount = allSortedPosts.reduce((acc, post) => {
-    const category = post.category || 'General'
-    acc[category] = (acc[category] || 0) + 1
-    return acc
-  }, {} as Record<string, number>)
-
-  const categories = Object.entries(categoryCount)
-    .sort((a, b) => b[1] - a[1])
-    .map(([name, count]) => ({ name, count }))
+  // 카테고리 목록 가져오기
+  const categories = getSortedCategories(allSortedPosts)
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">

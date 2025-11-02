@@ -1,19 +1,11 @@
 import { allPosts } from 'contentlayer2/generated'
 import Link from 'next/link'
 import type { Post } from '@/types/post'
+import { getSortedCategories } from '@/utils/posts'
 
 export default function CategorySection() {
-  // 모든 포스트에서 카테고리 추출 및 카운트
-  const categoryCount = (allPosts as Post[]).reduce((acc, post) => {
-    const category = post.category || 'General'
-    acc[category] = (acc[category] || 0) + 1
-    return acc
-  }, {} as Record<string, number>)
-
-  // 카테고리를 배열로 변환하고 포스트 수로 정렬
-  const categories = Object.entries(categoryCount)
-    .sort((a, b) => b[1] - a[1])
-    .map(([name, count]) => ({ name, count }))
+  // 카테고리 목록 가져오기
+  const categories = getSortedCategories(allPosts as Post[])
 
   return (
     <section className="animate-fade-in">

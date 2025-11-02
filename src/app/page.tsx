@@ -1,15 +1,13 @@
 import { allPosts } from 'contentlayer2/generated'
-import { compareDesc } from 'date-fns'
 import Link from 'next/link'
 import type { Post } from '@/types/post'
 import FeaturedSnippet from '@/components/FeaturedSnippet'
 import CategorySection from '@/components/CategorySection'
 import Footer from '@/components/Footer'
+import { getRecentPosts } from '@/utils/posts'
 
 export default function Home() {
-  const recentPosts = (allPosts as Post[])
-    .sort((a, b) => compareDesc(new Date(a.date), new Date(b.date)))
-    .slice(0, 3)
+  const recentPosts = getRecentPosts(allPosts as Post[], 3)
 
   return (
     <div>
