@@ -8,7 +8,8 @@
     "build": "npx contentlayer2 build && next build",
     "start": "next start",
     "lint": "next lint",
-    "contentlayer": "npx contentlayer2 build"
+    "contentlayer": "npx contentlayer2 build",
+    "analyze": "ANALYZE=true npm run build"
   },
   "dependencies": {
     "contentlayer2": "^0.5.3",
@@ -26,6 +27,7 @@
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
+    "@next/bundle-analyzer": "^16.0.1",
     "@tailwindcss/typography": "^0.5.16",
     "@types/lodash": "^4.17.14",
     "@types/node": "^20",
