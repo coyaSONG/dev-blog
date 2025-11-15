@@ -68,9 +68,9 @@
   --background-rgb: 32, 32, 35; /* #202023 - deep charcoal */
 
   /* Brand Colors - Adjusted for dark mode */
-  --brand-primary: 255 99 195; /* #ff63c3 - soft pink */
-  --brand-primary-light: 136 204 202; /* #88ccca - grass teal */
-  --brand-primary-dark: 255 150 210; /* lighter pink */
+  --brand-primary: 136 204 202; /* #88ccca - grass teal (primary for dark) */
+  --brand-primary-light: 169 220 218; /* lighter teal */
+  --brand-primary-dark: 103 188 186; /* darker teal */
 
   /* Dark mode adjustments */
   --gray-50: 17 24 39;
