@@ -8,6 +8,7 @@ import ReadingProgress from '@/components/common/ReadingProgress'
 import SocialShare from '@/components/common/SocialShare'
 import RelatedPosts from '@/components/RelatedPosts'
 import TableOfContents from '@/components/TableOfContents'
+import { ViewCount } from '@/components/ViewCount'
 import { getRelatedPosts } from '@/utils/posts'
 import { extractHeadings } from '@/utils/toc'
 import { rehypeHeadingIds } from '@/utils/rehype-heading-ids'
@@ -108,6 +109,7 @@ export default async function PostPage({ params }: Props) {
             <time dateTime={post.date}>
               {format(parseISO(post.date), 'PPP', { locale: ko })}
             </time>
+            <ViewCount slug={post.slug} />
             {post.tags && (
               <div className="flex gap-2">
                 {post.tags.map((tag) => (
