@@ -4,7 +4,7 @@ import { useEffect } from 'react'
 
 export function CopyButtonHandler() {
   useEffect(() => {
-    const handleCopyClick = async (event: MouseEvent) => {
+    const handleCopyClick = async (event: Event) => {
       const button = (event.currentTarget as HTMLButtonElement)
       const code = button.getAttribute('data-code')
 
@@ -38,13 +38,13 @@ export function CopyButtonHandler() {
     // Attach event listeners to all copy buttons
     const copyButtons = document.querySelectorAll('.copy-button')
     copyButtons.forEach((button) => {
-      button.addEventListener('click', handleCopyClick as EventListener)
+      button.addEventListener('click', handleCopyClick)
     })
 
     // Cleanup
     return () => {
       copyButtons.forEach((button) => {
-        button.removeEventListener('click', handleCopyClick as EventListener)
+        button.removeEventListener('click', handleCopyClick)
       })
     }
   }, [])
