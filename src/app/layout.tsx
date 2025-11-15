@@ -3,6 +3,7 @@ import "./globals.css";
 import Header from "@/components/layout/Header";
 import { ThemeProvider } from "@/components/common/ThemeProvider";
 import { Analytics } from "@vercel/analytics/react";
+import { ViewTransitions } from "next-view-transitions";
 
 export const metadata: Metadata = {
   title: {
@@ -32,16 +33,18 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="ko" suppressHydrationWarning>
-      <body className="bg-white text-black dark:bg-gray-900 dark:text-white font-sans">
-        <ThemeProvider>
-          <Header />
-          <div className="container mx-auto px-4">
-            {children}
-          </div>
-        </ThemeProvider>
-        <Analytics />
-      </body>
-    </html>
+    <ViewTransitions>
+      <html lang="ko" suppressHydrationWarning>
+        <body className="bg-white text-black dark:bg-gray-900 dark:text-white font-sans">
+          <ThemeProvider>
+            <Header />
+            <div className="container mx-auto px-4">
+              {children}
+            </div>
+          </ThemeProvider>
+          <Analytics />
+        </body>
+      </html>
+    </ViewTransitions>
   );
 }

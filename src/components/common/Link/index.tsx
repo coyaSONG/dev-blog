@@ -1,4 +1,4 @@
-import NextLink from 'next/link'
+import { Link as NextLink } from 'next-view-transitions'
 import { LinkProps } from './types'
 import { styles } from '@/utils/styles'
 

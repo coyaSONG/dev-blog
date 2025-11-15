@@ -1,4 +1,4 @@
-import Link from 'next/link'
+import { Link } from 'next-view-transitions'
 import { Post } from '@/types/post'
 import { format, parseISO } from 'date-fns'
 import { ko } from 'date-fns/locale'

@@ -1,5 +1,5 @@
 import { allPosts } from 'contentlayer2/generated'
-import Link from 'next/link'
+import { Link } from 'next-view-transitions'
 import type { Post } from '@/types/post'
 import { getSortedCategories } from '@/utils/posts'
 

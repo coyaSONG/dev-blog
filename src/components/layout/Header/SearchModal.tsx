@@ -5,7 +5,7 @@ import { X, Search } from 'lucide-react'
 import { Button } from '@/components/common/Button'
 import { allPosts } from 'contentlayer2/generated'
 import type { Post } from '@/types/post'
-import Link from 'next/link'
+import { Link } from 'next-view-transitions'
 import { sortPostsByDate, searchPosts } from '@/utils/posts'
 
 interface SearchModalProps {
