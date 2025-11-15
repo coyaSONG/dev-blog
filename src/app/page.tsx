@@ -60,7 +60,7 @@ export default async function Home() {
           </div>
           <p className="text-xl text-gray-600 dark:text-gray-400 mb-8 leading-relaxed max-w-2xl">
             픽셀과 코드 사이에서 의미 있는 경험을 설계합니다. <br />
-            React, Next.js, 그리고 웹 기술에 대한 생각을 기록합니다.
+            사용자를 위한 인터페이스, 그리고 더 나은 웹에 대한 이야기를 나눕니다.
           </p>
           <div className="flex gap-4">
             <Link
