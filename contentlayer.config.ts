@@ -1,5 +1,6 @@
 import { defineDocumentType, makeSource } from 'contentlayer2/source-files'
 import rehypePrettyCode from 'rehype-pretty-code'
+import rehypeSlug from 'rehype-slug'
 import { visit } from 'unist-util-visit'
 import type { Root, Element } from 'hast'
 import { rehypeCodeWrapper } from './src/utils/rehype-code-wrapper'
@@ -90,6 +91,7 @@ export default makeSource({
   documentTypes: [Post],
   mdx: {
     rehypePlugins: [
+      rehypeSlug,
       [rehypePrettyCode, rehypePrettyCodeOptions],
       () => (tree: Root) => {
         visit(tree, (node) => {
