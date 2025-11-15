@@ -35,7 +35,7 @@ export default async function Home() {
             <div>
               <span className="text-purple-500">name</span>
               <span className="text-gray-400">:</span>
-              <span className="text-emerald-500"> 'CoyaSONG'</span>
+              <span className="text-emerald-500"> 'coyaSONG'</span>
               <span className="text-gray-400">,</span>
             </div>
             <div>
