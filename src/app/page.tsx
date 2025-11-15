@@ -21,41 +21,41 @@ export default async function Home() {
         {/* 소개 섹션 */}
         <section className="mb-16 animate-fade-in">
           <div className="mb-3 font-mono text-sm text-brand-primary dark:text-brand-primary-light">
-            <span className="text-gray-400 dark:text-gray-600">// Developer.tsx</span>
+            <span className="text-gray-400 dark:text-gray-500">// Developer.tsx</span>
           </div>
-          <h1 className="text-6xl font-bold mb-4 leading-tight">
-            <span className="text-gray-400 dark:text-gray-600 font-mono text-2xl">const</span>
+          <h1 className="text-6xl font-bold mb-4 leading-tight font-heading">
+            <span className="text-gray-400 dark:text-gray-500 font-mono text-2xl font-normal">const</span>
             <br />
-            <span className="bg-gradient-to-r from-brand-primary via-purple-500 to-brand-primary-light bg-clip-text text-transparent">
+            <span className="text-brand-primary dark:text-brand-primary-light">
               developer
             </span>
-            <span className="text-gray-400 dark:text-gray-600 font-mono text-3xl"> = {`{`}</span>
+            <span className="text-gray-400 dark:text-gray-500 font-mono text-3xl font-normal"> = {`{`}</span>
           </h1>
           <div className="pl-8 mb-6 font-mono text-lg space-y-2">
             <div>
-              <span className="text-purple-500">name</span>
-              <span className="text-gray-400">:</span>
-              <span className="text-emerald-500"> 'coyaSONG'</span>
-              <span className="text-gray-400">,</span>
+              <span className="text-accent-css">name</span>
+              <span className="text-gray-400 dark:text-gray-500">:</span>
+              <span className="text-accent-web"> 'coyaSONG'</span>
+              <span className="text-gray-400 dark:text-gray-500">,</span>
             </div>
             <div>
-              <span className="text-purple-500">role</span>
-              <span className="text-gray-400">:</span>
-              <span className="text-emerald-500"> 'Frontend Developer'</span>
-              <span className="text-gray-400">,</span>
+              <span className="text-accent-css">role</span>
+              <span className="text-gray-400 dark:text-gray-500">:</span>
+              <span className="text-accent-web"> 'Frontend Developer'</span>
+              <span className="text-gray-400 dark:text-gray-500">,</span>
             </div>
             <div>
-              <span className="text-purple-500">focus</span>
-              <span className="text-gray-400">: [</span>
-              <span className="text-emerald-500">'User Experience'</span>
-              <span className="text-gray-400">, </span>
-              <span className="text-emerald-500">'Performance'</span>
-              <span className="text-gray-400">, </span>
-              <span className="text-emerald-500">'Aesthetics'</span>
-              <span className="text-gray-400">]</span>
+              <span className="text-accent-css">focus</span>
+              <span className="text-gray-400 dark:text-gray-500">: [</span>
+              <span className="text-accent-web">'User Experience'</span>
+              <span className="text-gray-400 dark:text-gray-500">, </span>
+              <span className="text-accent-web">'Performance'</span>
+              <span className="text-gray-400 dark:text-gray-500">, </span>
+              <span className="text-accent-web">'Aesthetics'</span>
+              <span className="text-gray-400 dark:text-gray-500">]</span>
             </div>
           </div>
-          <div className="mb-8 font-mono text-3xl text-gray-400 dark:text-gray-600">
+          <div className="mb-8 font-mono text-3xl text-gray-400 dark:text-gray-500">
             {`}`}
           </div>
           <p className="text-xl text-gray-600 dark:text-gray-400 mb-8 leading-relaxed max-w-2xl">
@@ -82,12 +82,12 @@ export default async function Home() {
 
         {/* 최근 포스트 섹션 */}
         <section className="mb-16">
-          <h2 className="text-3xl font-bold mb-8 text-gray-900 dark:text-white">최근 포스트</h2>
+          <h2 className="text-3xl font-bold mb-8 text-gray-900 dark:text-white font-heading">최근 포스트</h2>
           <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
             {recentPosts.map((post, index) => (
               <article
                 key={post._id}
-                className={`group rounded-xl border border-gray-200 dark:border-gray-800 ${getCardAccentColor(post.tags || [])} p-6 hover:shadow-xl transition-all duration-300 hover:-translate-y-2 bg-white dark:bg-gray-900/50 backdrop-blur-sm animate-fade-in`}
+                className={`group rounded-2xl border border-gray-200 dark:border-gray-800 ${getCardAccentColor(post.tags || [])} p-6 hover:shadow-lg transition-all duration-200 hover:-translate-y-1 hover:scale-[1.02] bg-white dark:bg-gray-900/50 backdrop-blur-sm animate-fade-in`}
                 style={{ animationDelay: `${index * 100}ms` }}
               >
                 <Link href={post.url}>

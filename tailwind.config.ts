@@ -11,7 +11,8 @@ const config: Config = {
   theme: {
     extend: {
       fontFamily: {
-        sans: ['"Pretendard Variable"', 'Pretendard', '-apple-system', 'BlinkMacSystemFont', 'system-ui', 'Roboto', 'sans-serif'],
+        sans: ['"Pretendard Variable"', 'Pretendard', '-apple-system', 'BlinkMacSystemFont', 'system-ui', 'sans-serif'],
+        heading: ['"GmarketSans"', '"Pretendard Variable"', 'Pretendard', 'sans-serif'],
       },
       colors: {
         brand: {
@@ -73,10 +74,10 @@ const config: Config = {
         },
       },
       animation: {
-        'fade-in': 'fade-in 0.5s ease-out',
-        'fade-in-down': 'fade-in-down 0.5s ease-out',
-        'slide-in': 'slide-in 0.3s ease-out',
-        'scale-in': 'scale-in 0.3s ease-out',
+        'fade-in': 'fade-in 0.2s ease',
+        'fade-in-down': 'fade-in-down 0.2s ease',
+        'slide-in': 'slide-in 0.2s ease',
+        'scale-in': 'scale-in 0.2s ease',
       }
     },
   },

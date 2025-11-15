@@ -33,7 +33,7 @@ export default async function PostsPage({ searchParams }: PostsPageProps) {
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-      <h1 className="text-4xl font-bold mb-8 bg-gradient-to-r from-brand-primary to-brand-primary-light bg-clip-text text-transparent">
+      <h1 className="text-4xl font-bold mb-8 text-brand-primary dark:text-brand-primary-light font-heading">
         {selectedCategory ? `${selectedCategory} 포스트` : '모든 포스트'}
       </h1>
 
@@ -41,10 +41,10 @@ export default async function PostsPage({ searchParams }: PostsPageProps) {
       <div className="mb-12 flex flex-wrap gap-3">
         <Link
           href="/posts"
-          className={`px-5 py-2.5 rounded-lg transition-all font-medium ${
+          className={`px-5 py-2.5 rounded-2xl transition-all duration-200 font-medium ${
             !selectedCategory
-              ? 'bg-brand-primary text-white shadow-md hover:shadow-lg hover:scale-105'
-              : 'bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 hover:scale-105'
+              ? 'bg-brand-primary text-white shadow-md hover:shadow-lg hover:scale-[1.02]'
+              : 'bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 hover:scale-[1.02]'
           }`}
         >
           전체 ({allSortedPosts.length})
@@ -53,10 +53,10 @@ export default async function PostsPage({ searchParams }: PostsPageProps) {
           <Link
             key={name}
             href={`/posts?category=${encodeURIComponent(name)}`}
-            className={`px-5 py-2.5 rounded-lg transition-all font-medium ${
+            className={`px-5 py-2.5 rounded-2xl transition-all duration-200 font-medium ${
               selectedCategory === name
-                ? 'bg-brand-primary text-white shadow-md hover:shadow-lg hover:scale-105'
-                : 'bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 hover:scale-105'
+                ? 'bg-brand-primary text-white shadow-md hover:shadow-lg hover:scale-[1.02]'
+                : 'bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 hover:scale-[1.02]'
             }`}
           >
             {name} ({count})
@@ -76,7 +76,7 @@ export default async function PostsPage({ searchParams }: PostsPageProps) {
           {posts.map((post, index) => (
             <article
               key={post._id}
-              className={`group rounded-xl border border-gray-200 dark:border-gray-800 ${getCardAccentColor(post.tags || [])} p-6 hover:shadow-xl transition-all duration-300 hover:-translate-y-2 bg-white dark:bg-gray-900/50 backdrop-blur-sm animate-fade-in`}
+              className={`group rounded-2xl border border-gray-200 dark:border-gray-800 ${getCardAccentColor(post.tags || [])} p-6 hover:shadow-lg transition-all duration-200 hover:-translate-y-1 hover:scale-[1.02] bg-white dark:bg-gray-900/50 backdrop-blur-sm animate-fade-in`}
               style={{
                 viewTransitionName: 'post-card',
                 animationDelay: `${index * 50}ms`
@@ -86,7 +86,7 @@ export default async function PostsPage({ searchParams }: PostsPageProps) {
                 {/* 카테고리 표시 */}
                 {post.category && (
                   <div className="mb-3">
-                    <span className="px-3 py-1 rounded-full text-xs font-medium bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-300 border border-purple-200 dark:border-purple-800">
+                    <span className="px-3 py-1 rounded-full text-xs font-medium bg-accent-css/10 dark:bg-accent-css/20 text-accent-css border border-accent-css/30">
                       {post.category}
                     </span>
                   </div>
@@ -98,7 +98,7 @@ export default async function PostsPage({ searchParams }: PostsPageProps) {
                     {post.tags.map((tag) => (
                       <span
                         key={tag}
-                        className={`px-3 py-1 rounded-full text-xs font-medium border ${getTagClasses(tag)} transition-transform group-hover:scale-105`}
+                        className={`px-3 py-1 rounded-full text-xs font-medium border ${getTagClasses(tag)} transition-transform duration-200 group-hover:scale-105`}
                       >
                         {tag}
                       </span>
@@ -106,7 +106,7 @@ export default async function PostsPage({ searchParams }: PostsPageProps) {
                   </div>
                 )}
 
-                <h2 className="text-2xl font-bold mb-3 group-hover:text-brand-primary dark:group-hover:text-brand-primary-light transition-colors line-clamp-2">
+                <h2 className="text-2xl font-bold mb-3 group-hover:text-brand-primary dark:group-hover:text-brand-primary-light transition-colors duration-200 line-clamp-2 font-heading">
                   {post.title}
                 </h2>
                 <p className="text-gray-600 dark:text-gray-400 mb-4 line-clamp-2 leading-relaxed">
