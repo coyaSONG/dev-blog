@@ -14,6 +14,7 @@ import { getRelatedPosts } from '@/utils/posts'
 import { extractHeadings } from '@/utils/toc'
 import { rehypeHeadingIds } from '@/utils/rehype-heading-ids'
 import { getViewCount } from '@/lib/views'
+import { getTagClasses } from '@/utils/styles'
 
 type Props = {
   params: Promise<{
@@ -108,26 +109,26 @@ export default async function PostPage({ params }: Props) {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
       <article className="prose dark:prose-invert mx-auto py-8">
-        <div className="mb-8">
-          <h1 className="mb-2">{post.title}</h1>
-          <div className="flex items-center gap-4 text-sm text-gray-600 dark:text-gray-400">
+        <div className="mb-8 animate-fade-in">
+          <h1 className="mb-4 bg-gradient-to-r from-gray-900 to-gray-700 dark:from-white dark:to-gray-300 bg-clip-text text-transparent">{post.title}</h1>
+          <div className="flex flex-wrap items-center gap-4 text-sm text-gray-600 dark:text-gray-400 mb-4">
             <time dateTime={post.date}>
               {format(parseISO(post.date), 'PPP', { locale: ko })}
             </time>
             <ViewCount slug={post.slug} initialViews={initialViews} />
-            {post.tags && (
-              <div className="flex gap-2">
-                {post.tags.map((tag) => (
-                  <span
-                    key={tag}
-                    className="px-2 py-1 rounded-full text-xs bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-100"
-                  >
-                    {tag}
-                  </span>
-                ))}
-              </div>
-            )}
           </div>
+          {post.tags && (
+            <div className="flex flex-wrap gap-2">
+              {post.tags.map((tag) => (
+                <span
+                  key={tag}
+                  className={`px-3 py-1 rounded-full text-xs font-medium border ${getTagClasses(tag)}`}
+                >
+                  {tag}
+                </span>
+              ))}
+            </div>
+          )}
         </div>
         <SocialShare
           title={post.title}

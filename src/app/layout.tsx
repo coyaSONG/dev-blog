@@ -35,7 +35,7 @@ export default function RootLayout({
   return (
     <ViewTransitions>
       <html lang="ko" suppressHydrationWarning>
-        <body className="bg-white text-black dark:bg-gray-900 dark:text-white font-sans">
+        <body className="bg-white text-black dark:bg-gray-900 dark:text-white" style={{ fontFamily: '"Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, Roboto, sans-serif' }}>
           <ThemeProvider>
             <Header />
             <div className="container mx-auto px-4">
