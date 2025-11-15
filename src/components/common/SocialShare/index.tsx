@@ -1,18 +1,26 @@
 'use client'
 
 import { Share2, Twitter, Facebook, Linkedin, Link as LinkIcon } from 'lucide-react'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 
 interface SocialShareProps {
   title: string
-  url: string
+  url?: string
   description?: string
 }
 
 export default function SocialShare({ title, url, description }: SocialShareProps) {
   const [copied, setCopied] = useState(false)
+  const [currentUrl, setCurrentUrl] = useState(url || '')
 
-  const encodedUrl = encodeURIComponent(url)
+  useEffect(() => {
+    // Use client-side URL if not provided or if it's localhost
+    if (!url || url.includes('localhost')) {
+      setCurrentUrl(window.location.href)
+    }
+  }, [url])
+
+  const encodedUrl = encodeURIComponent(currentUrl)
   const encodedTitle = encodeURIComponent(title)
   const encodedDescription = encodeURIComponent(description || '')
 
@@ -24,7 +32,7 @@ export default function SocialShare({ title, url, description }: SocialShareProp
 
   const handleCopyLink = async () => {
     try {
-      await navigator.clipboard.writeText(url)
+      await navigator.clipboard.writeText(currentUrl)
       setCopied(true)
       setTimeout(() => setCopied(false), 2000)
     } catch (err) {
