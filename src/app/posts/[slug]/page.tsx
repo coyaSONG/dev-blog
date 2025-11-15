@@ -9,6 +9,7 @@ import SocialShare from '@/components/common/SocialShare'
 import RelatedPosts from '@/components/RelatedPosts'
 import TableOfContents from '@/components/TableOfContents'
 import { ViewCount } from '@/components/ViewCount'
+import { Comments } from '@/components/common/Comments'
 import { getRelatedPosts } from '@/utils/posts'
 import { extractHeadings } from '@/utils/toc'
 import { rehypeHeadingIds } from '@/utils/rehype-heading-ids'
@@ -144,6 +145,7 @@ export default async function PostPage({ params }: Props) {
           />
         </div>
         <RelatedPosts posts={relatedPosts} />
+        <Comments />
       </article>
     </>
   )
