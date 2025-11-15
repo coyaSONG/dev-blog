@@ -16,3 +16,79 @@ body {
   color: rgb(var(--foreground-rgb));
   background: rgb(var(--background-rgb));
 }
+
+/* View Transitions API */
+@media (prefers-reduced-motion: no-preference) {
+  /* Enable view transitions for supported browsers */
+  @supports (view-transition-name: none) {
+    /* Page transition animations */
+    ::view-transition-old(root),
+    ::view-transition-new(root) {
+      animation-duration: 0.3s;
+    }
+
+    /* Fade transition for page changes */
+    ::view-transition-old(root) {
+      animation-name: fade-out;
+    }
+
+    ::view-transition-new(root) {
+      animation-name: fade-in;
+    }
+
+    /* Slide up transition for post cards */
+    ::view-transition-old(post-card),
+    ::view-transition-new(post-card) {
+      animation-duration: 0.4s;
+    }
+
+    ::view-transition-old(post-card) {
+      animation-name: slide-to-top;
+    }
+
+    ::view-transition-new(post-card) {
+      animation-name: slide-from-bottom;
+    }
+  }
+}
+
+/* View transition animations */
+@keyframes fade-out {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slide-to-top {
+  from {
+    transform: translateY(0);
+    opacity: 1;
+  }
+  to {
+    transform: translateY(-30px);
+    opacity: 0;
+  }
+}
+
+@keyframes slide-from-bottom {
+  from {
+    transform: translateY(30px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}

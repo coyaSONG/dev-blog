@@ -71,6 +71,7 @@ export default async function PostsPage({ searchParams }: PostsPageProps) {
             <article
               key={post._id}
               className="rounded-lg border dark:border-gray-800 border-gray-200 p-6 hover:shadow-lg transition-all duration-300 hover:-translate-y-1"
+              style={{ viewTransitionName: 'post-card' } as React.CSSProperties}
             >
               <Link href={post.url}>
                 {/* 카테고리 표시 */}
