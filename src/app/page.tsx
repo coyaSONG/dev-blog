@@ -20,12 +20,47 @@ export default async function Home() {
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         {/* 소개 섹션 */}
         <section className="mb-16 animate-fade-in">
-          <h1 className="text-5xl font-bold mb-6 bg-gradient-to-r from-brand-primary to-brand-primary-light bg-clip-text text-transparent">
-            안녕하세요! 👋
+          <div className="mb-3 font-mono text-sm text-brand-primary dark:text-brand-primary-light">
+            <span className="text-gray-400 dark:text-gray-600">// Developer.tsx</span>
+          </div>
+          <h1 className="text-6xl font-bold mb-4 leading-tight">
+            <span className="text-gray-400 dark:text-gray-600 font-mono text-2xl">const</span>
+            <br />
+            <span className="bg-gradient-to-r from-brand-primary via-purple-500 to-brand-primary-light bg-clip-text text-transparent">
+              developer
+            </span>
+            <span className="text-gray-400 dark:text-gray-600 font-mono text-3xl"> = {`{`}</span>
           </h1>
-          <p className="text-xl text-gray-600 dark:text-gray-400 mb-8 leading-relaxed">
-            프론트엔드 개발자 CoyaSONG의 기술 블로그입니다.<br />
-            웹 개발, React, Next.js에 대한 이야기를 공유합니다.
+          <div className="pl-8 mb-6 font-mono text-lg space-y-2">
+            <div>
+              <span className="text-purple-500">name</span>
+              <span className="text-gray-400">:</span>
+              <span className="text-emerald-500"> 'CoyaSONG'</span>
+              <span className="text-gray-400">,</span>
+            </div>
+            <div>
+              <span className="text-purple-500">role</span>
+              <span className="text-gray-400">:</span>
+              <span className="text-emerald-500"> 'Frontend Developer'</span>
+              <span className="text-gray-400">,</span>
+            </div>
+            <div>
+              <span className="text-purple-500">focus</span>
+              <span className="text-gray-400">: [</span>
+              <span className="text-emerald-500">'User Experience'</span>
+              <span className="text-gray-400">, </span>
+              <span className="text-emerald-500">'Performance'</span>
+              <span className="text-gray-400">, </span>
+              <span className="text-emerald-500">'Aesthetics'</span>
+              <span className="text-gray-400">]</span>
+            </div>
+          </div>
+          <div className="mb-8 font-mono text-3xl text-gray-400 dark:text-gray-600">
+            {`}`}
+          </div>
+          <p className="text-xl text-gray-600 dark:text-gray-400 mb-8 leading-relaxed max-w-2xl">
+            픽셀과 코드 사이에서 의미 있는 경험을 설계합니다. <br />
+            React, Next.js, 그리고 웹 기술에 대한 생각을 기록합니다.
           </p>
           <div className="flex gap-4">
             <Link
