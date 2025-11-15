@@ -1,19 +1,22 @@
 'use client'
 
+import { useState, useEffect } from 'react'
 import { animated, useSpring, to } from '@react-spring/web'
-import { useBoop } from '@/hooks/useBoop'
 
 interface AnimatedToggleProps {
   isDark: boolean
 }
 
 export default function AnimatedToggle({ isDark }: AnimatedToggleProps) {
+  const [isHovered, setIsHovered] = useState(false)
+
   // Theme transition spring config (from Josh's dark mode example)
   const themeSpringConfig = { mass: 4, tension: 250, friction: 35 }
 
-  // Main theme animation
-  const themeProps = useSpring({
-    rotation: isDark ? 40 : 90,
+  // Combined theme and boop animation
+  const props = useSpring({
+    themeRotation: isDark ? 40 : 90,
+    boopRotation: isHovered ? 15 : 0,
     centerR: isDark ? 9 : 5,
     maskCx: isDark ? 12 : 30,
     maskCy: isDark ? 4 : 0,
@@ -21,11 +24,14 @@ export default function AnimatedToggle({ isDark }: AnimatedToggleProps) {
     config: themeSpringConfig,
   })
 
-  // Boop animation - brief rotation on hover
-  const { style: boopStyle, trigger: triggerBoop } = useBoop({
-    rotation: 15,
-    timing: 150,
-  })
+  // Boop reset effect
+  useEffect(() => {
+    if (!isHovered) return
+    const timeoutId = window.setTimeout(() => {
+      setIsHovered(false)
+    }, 150)
+    return () => window.clearTimeout(timeoutId)
+  }, [isHovered])
 
   return (
     <animated.svg
@@ -38,19 +44,14 @@ export default function AnimatedToggle({ isDark }: AnimatedToggleProps) {
       strokeLinecap="round"
       strokeLinejoin="round"
       stroke="currentColor"
-      onMouseEnter={triggerBoop}
+      onMouseEnter={() => setIsHovered(true)}
       style={{
         display: 'inline-block',
         verticalAlign: 'middle',
         transformOrigin: 'center center',
         transform: to(
-          [themeProps.rotation, boopStyle.transform],
-          (themeRot: number, boopTransform) => {
-            // Extract rotation from boop transform string
-            const boopRotMatch = boopTransform.toString().match(/rotate\((-?\d+(?:\.\d+)?)deg\)/)
-            const boopRot = boopRotMatch ? parseFloat(boopRotMatch[1]) : 0
-            return `rotate(${themeRot + boopRot}deg)`
-          }
+          [props.themeRotation, props.boopRotation],
+          (theme, boop) => `rotate(${theme + boop}deg)`
         ),
       }}
     >
@@ -60,8 +61,8 @@ export default function AnimatedToggle({ isDark }: AnimatedToggleProps) {
         <animated.circle
           r="9"
           fill="black"
-          cx={themeProps.maskCx}
-          cy={themeProps.maskCy}
+          cx={props.maskCx}
+          cy={props.maskCy}
         />
       </mask>
 
@@ -71,11 +72,11 @@ export default function AnimatedToggle({ isDark }: AnimatedToggleProps) {
         cy="12"
         fill="currentColor"
         mask="url(#moon-mask)"
-        r={themeProps.centerR}
+        r={props.centerR}
       />
 
       {/* Sun rays */}
-      <animated.g stroke="currentColor" opacity={themeProps.sunOpacity}>
+      <animated.g stroke="currentColor" opacity={props.sunOpacity}>
         <line x1="12" y1="1" x2="12" y2="3" />
         <line x1="12" y1="21" x2="12" y2="23" />
         <line x1="4.22" y1="4.22" x2="5.64" y2="5.64" />
