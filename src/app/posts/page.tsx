@@ -1,6 +1,7 @@
 import { allPosts } from 'contentlayer2/generated'
 import { Link } from 'next-view-transitions'
 import type { Post } from '@/types/post'
+import { ViewCount } from '@/components/ViewCount'
 import { sortPostsByDate, filterPostsByCategory, getSortedCategories } from '@/utils/posts'
 
 export const metadata = {
@@ -103,9 +104,12 @@ export default async function PostsPage({ searchParams }: PostsPageProps) {
                 <p className="text-gray-600 dark:text-gray-400 mb-4">
                   {post.description}
                 </p>
-                <time className="text-sm text-gray-500">
-                  {new Date(post.date).toLocaleDateString()}
-                </time>
+                <div className="flex items-center gap-4 text-sm text-gray-500 dark:text-gray-500">
+                  <time dateTime={post.date}>
+                    {new Date(post.date).toLocaleDateString()}
+                  </time>
+                  <ViewCount slug={post.slug} increment={false} />
+                </div>
               </Link>
             </article>
           ))}

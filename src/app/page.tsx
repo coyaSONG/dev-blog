@@ -4,6 +4,7 @@ import type { Post } from '@/types/post'
 import FeaturedSnippet from '@/components/FeaturedSnippet'
 import CategorySection from '@/components/CategorySection'
 import Footer from '@/components/Footer'
+import { ViewCount } from '@/components/ViewCount'
 import { getRecentPosts } from '@/utils/posts'
 
 export default function Home() {
@@ -63,9 +64,12 @@ export default function Home() {
                   <p className="text-gray-600 dark:text-gray-300 mb-4">
                     {post.description}
                   </p>
-                  <time className="text-sm text-gray-500">
-                    {new Date(post.date).toLocaleDateString()}
-                  </time>
+                  <div className="flex items-center gap-4 text-sm text-gray-500 dark:text-gray-500">
+                    <time dateTime={post.date}>
+                      {new Date(post.date).toLocaleDateString()}
+                    </time>
+                    <ViewCount slug={post.slug} increment={false} />
+                  </div>
                 </Link>
               </article>
             ))}
