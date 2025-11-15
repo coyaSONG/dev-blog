@@ -25,6 +25,7 @@
 *.pem
 .claude/
 tasks.md
+.playwright-mcp/
 
 # debug
 npm-debug.log*
