@@ -45,7 +45,7 @@ export default function AnimatedToggle({ isDark }: AnimatedToggleProps) {
         transformOrigin: 'center center',
         transform: to(
           [themeProps.rotation, boopStyle.transform],
-          (themeRot, boopTransform) => {
+          (themeRot: number, boopTransform) => {
             // Extract rotation from boop transform string
             const boopRotMatch = boopTransform.toString().match(/rotate\((-?\d+(?:\.\d+)?)deg\)/)
             const boopRot = boopRotMatch ? parseFloat(boopRotMatch[1]) : 0
