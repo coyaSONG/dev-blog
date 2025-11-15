@@ -1,17 +1,13 @@
 'use client'
 
-import { Sun, Moon } from 'lucide-react'
 import { NAV_ITEMS } from '@/constants/layout'
-import { Button } from '@/components/common/Button'
 import { Link } from '@/components/common/Link'
 
 interface MobileMenuProps {
   isOpen: boolean
-  theme: string
-  toggleTheme: () => void
 }
 
-export default function MobileMenu({ isOpen, theme, toggleTheme }: MobileMenuProps) {
+export default function MobileMenu({ isOpen }: MobileMenuProps) {
   if (!isOpen) return null
 
   return (
@@ -27,24 +23,6 @@ export default function MobileMenu({ isOpen, theme, toggleTheme }: MobileMenuPro
             {item.label}
           </Link>
         ))}
-        <Button
-          onClick={toggleTheme}
-          variant="ghost"
-          className="w-full text-left px-3 py-2"
-          aria-label={theme === 'dark' ? "Switch to light mode" : "Switch to dark mode"}
-        >
-          {theme === 'dark' ? (
-            <div className="flex items-center">
-              <Sun size={20} className="mr-3" />
-              <span>Light Mode</span>
-            </div>
-          ) : (
-            <div className="flex items-center">
-              <Moon size={20} className="mr-3" />
-              <span>Dark Mode</span>
-            </div>
-          )}
-        </Button>
       </div>
     </div>
   )

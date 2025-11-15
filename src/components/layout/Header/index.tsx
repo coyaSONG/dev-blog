@@ -1,21 +1,34 @@
 'use client'
 
-import { Menu, X, Sun, Moon, Search } from 'lucide-react'
+import { Menu, X, Search } from 'lucide-react'
 import { useState, useMemo, useCallback } from 'react'
-import { useTheme } from '@/components/common/ThemeProvider'
+import { animated } from '@react-spring/web'
+import ThemeToggle from '@/components/common/ThemeToggle'
 import MobileMenu from './MobileMenu'
 import SearchModal from './SearchModal'
 import { LAYOUT, NAV_ITEMS } from '@/constants/layout'
 import { useScrollProgress } from '@/hooks/useScrollProgress'
-import { ThemeContextType } from '@/types/theme'
+import { useBoop } from '@/hooks/useBoop'
 import { Button } from '@/components/common/Button'
 import { Link } from '@/components/common/Link'
 
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [isSearchOpen, setIsSearchOpen] = useState(false)
-  const { theme, toggleTheme }: ThemeContextType = useTheme()
   const scrollProgress = useScrollProgress()
+
+  // Boop animation for search icon
+  const { style: searchBoopStyle, trigger: triggerSearchBoop } = useBoop({
+    y: -2,
+    scale: 1.1,
+    timing: 150,
+  })
+
+  // Boop animation for mobile menu icon
+  const { style: menuBoopStyle, trigger: triggerMenuBoop } = useBoop({
+    rotation: 20,
+    timing: 150,
+  })
 
   const handleSearchOpen = useCallback(() => {
     setIsSearchOpen(true)
@@ -30,12 +43,10 @@ export default function Header() {
   }, [])
 
   const memoizedMobileMenu = useMemo(() => (
-    <MobileMenu 
-      isOpen={isMenuOpen} 
-      theme={theme} 
-      toggleTheme={toggleTheme} 
+    <MobileMenu
+      isOpen={isMenuOpen}
     />
-  ), [isMenuOpen, theme, toggleTheme])
+  ), [isMenuOpen])
 
   return (
     <>
@@ -58,40 +69,49 @@ export default function Header() {
               </Link>
             </div>
 
-            <nav className="hidden md:flex items-center space-x-8">
-              <Button
-                onClick={handleSearchOpen}
-                variant="ghost"
-                aria-label="Search posts"
-              >
-                <Search size={LAYOUT.iconSize} />
-              </Button>
-              {NAV_ITEMS.map((item) => (
-                <Link
-                  key={item.path}
-                  href={item.path}
-                  external={item.external}
-                >
-                  {item.label}
-                </Link>
-              ))}
-              <Button
-                onClick={toggleTheme}
-                variant="ghost"
-                aria-label={theme === 'dark' ? "Switch to light mode" : "Switch to dark mode"}
-              >
-                {theme === 'dark' ? <Sun size={20} /> : <Moon size={20} />}
-              </Button>
-            </nav>
+            <div className="flex items-center space-x-4">
+              {/* Desktop Navigation */}
+              <nav className="hidden md:flex items-center space-x-8">
+                {NAV_ITEMS.map((item) => (
+                  <Link
+                    key={item.path}
+                    href={item.path}
+                    external={item.external}
+                  >
+                    {item.label}
+                  </Link>
+                ))}
+              </nav>
 
-            <Button
-              onClick={handleMenuToggle}
-              variant="ghost"
-              className="md:hidden"
-              aria-label="Toggle menu"
-            >
-              {isMenuOpen ? <X size={20} /> : <Menu size={20} />}
-            </Button>
+              {/* Search and Theme Toggle - visible on all screens */}
+              <div className="flex items-center space-x-1">
+                <Button
+                  onClick={handleSearchOpen}
+                  variant="ghost"
+                  aria-label="Search posts"
+                  onMouseEnter={triggerSearchBoop}
+                  className="p-2 flex items-center justify-center"
+                >
+                  <animated.span style={searchBoopStyle} className="inline-flex items-center justify-center">
+                    <Search size={20} />
+                  </animated.span>
+                </Button>
+                <ThemeToggle />
+              </div>
+
+              {/* Mobile Menu Button */}
+              <Button
+                onClick={handleMenuToggle}
+                variant="ghost"
+                className="md:hidden p-2 flex items-center justify-center"
+                aria-label="Toggle menu"
+                onMouseEnter={triggerMenuBoop}
+              >
+                <animated.span style={menuBoopStyle} className="inline-flex items-center justify-center">
+                  {isMenuOpen ? <X size={20} /> : <Menu size={20} />}
+                </animated.span>
+              </Button>
+            </div>
           </div>
         </div>
 
