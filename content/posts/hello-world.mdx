@@ -21,4 +21,36 @@ tags:
 - MDX 지원
 - 다크 모드
 - 반응형 디자인
-- 검색 기능 
+- 검색 기능
+
+## 코드 예시
+
+여기 간단한 React 컴포넌트 예시입니다:
+
+```typescript
+interface ButtonProps {
+  text: string
+  onClick: () => void
+}
+
+export function Button({ text, onClick }: ButtonProps) {
+  return (
+    <button
+      onClick={onClick}
+      className="px-4 py-2 bg-blue-500 text-white rounded"
+    >
+      {text}
+    </button>
+  )
+}
+```
+
+JavaScript 예시:
+
+```javascript
+const greet = (name) => {
+  console.log(`Hello, ${name}!`)
+}
+
+greet('World')
+``` 

@@ -2,7 +2,6 @@ import { notFound } from 'next/navigation'
 import { allPosts } from 'contentlayer2/generated'
 import { format, parseISO } from 'date-fns'
 import { ko } from 'date-fns/locale'
-import { MDXRemote } from 'next-mdx-remote/rsc'
 import type { Post } from '@/types/post'
 import ReadingProgress from '@/components/common/ReadingProgress'
 import SocialShare from '@/components/common/SocialShare'
@@ -12,9 +11,10 @@ import { ViewCount } from '@/components/ViewCount'
 import { Comments } from '@/components/common/Comments'
 import { getRelatedPosts } from '@/utils/posts'
 import { extractHeadings } from '@/utils/toc'
-import { rehypeHeadingIds } from '@/utils/rehype-heading-ids'
 import { getViewCount } from '@/lib/views'
 import { getTagClasses } from '@/utils/styles'
+import { CopyButtonHandler } from '@/components/common/CopyButtonHandler'
+import { MDXContent } from '@/components/mdx/MDXContent'
 
 type Props = {
   params: Promise<{
@@ -104,6 +104,7 @@ export default async function PostPage({ params }: Props) {
     <>
       <ReadingProgress />
       <TableOfContents items={tocItems} />
+      <CopyButtonHandler />
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
@@ -136,14 +137,7 @@ export default async function PostPage({ params }: Props) {
           description={post.description}
         />
         <div className="mt-8">
-          <MDXRemote
-            source={post.body.raw}
-            options={{
-              mdxOptions: {
-                rehypePlugins: [rehypeHeadingIds],
-              },
-            }}
-          />
+          <MDXContent code={post.body.code} />
         </div>
         <RelatedPosts posts={relatedPosts} />
         <Comments />

@@ -2,6 +2,7 @@ import { defineDocumentType, makeSource } from 'contentlayer2/source-files'
 import rehypePrettyCode from 'rehype-pretty-code'
 import { visit } from 'unist-util-visit'
 import type { Root, Element } from 'hast'
+import { rehypeCodeWrapper } from './src/utils/rehype-code-wrapper'
 
 interface RehypePrettyCodeOptions {
   theme: string
@@ -100,6 +101,7 @@ export default makeSource({
           }
         })
       },
+      rehypeCodeWrapper,
     ],
   },
 })
