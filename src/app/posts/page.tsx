@@ -3,6 +3,7 @@ import { Link } from 'next-view-transitions'
 import type { Post } from '@/types/post'
 import { ViewCount } from '@/components/ViewCount'
 import { sortPostsByDate, filterPostsByCategory, getSortedCategories } from '@/utils/posts'
+import { getViewCounts } from '@/lib/views'
 
 export const metadata = {
   title: '블로그 포스트',
@@ -25,6 +26,9 @@ export default async function PostsPage({ searchParams }: PostsPageProps) {
 
   // 카테고리 목록 가져오기
   const categories = getSortedCategories(allSortedPosts)
+
+  // Fetch view counts for all posts in parallel
+  const viewCounts = await getViewCounts(posts.map(post => post.slug))
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
@@ -108,7 +112,11 @@ export default async function PostsPage({ searchParams }: PostsPageProps) {
                   <time dateTime={post.date}>
                     {new Date(post.date).toLocaleDateString()}
                   </time>
-                  <ViewCount slug={post.slug} increment={false} />
+                  <ViewCount
+                    slug={post.slug}
+                    increment={false}
+                    initialViews={viewCounts.get(post.slug)}
+                  />
                 </div>
               </Link>
             </article>

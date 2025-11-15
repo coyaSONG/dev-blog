@@ -12,6 +12,7 @@ import { ViewCount } from '@/components/ViewCount'
 import { getRelatedPosts } from '@/utils/posts'
 import { extractHeadings } from '@/utils/toc'
 import { rehypeHeadingIds } from '@/utils/rehype-heading-ids'
+import { getViewCount } from '@/lib/views'
 
 type Props = {
   params: Promise<{
@@ -94,6 +95,9 @@ export default async function PostPage({ params }: Props) {
   const relatedPosts = getRelatedPosts(post, allPosts as Post[], 3)
   const tocItems = extractHeadings(post.body.raw)
 
+  // Fetch initial view count from server
+  const initialViews = await getViewCount(post.slug)
+
   return (
     <>
       <ReadingProgress />
@@ -109,7 +113,7 @@ export default async function PostPage({ params }: Props) {
             <time dateTime={post.date}>
               {format(parseISO(post.date), 'PPP', { locale: ko })}
             </time>
-            <ViewCount slug={post.slug} />
+            <ViewCount slug={post.slug} initialViews={initialViews} />
             {post.tags && (
               <div className="flex gap-2">
                 {post.tags.map((tag) => (

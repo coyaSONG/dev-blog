@@ -6,9 +6,13 @@ import CategorySection from '@/components/CategorySection'
 import Footer from '@/components/Footer'
 import { ViewCount } from '@/components/ViewCount'
 import { getRecentPosts } from '@/utils/posts'
+import { getViewCounts } from '@/lib/views'
 
-export default function Home() {
+export default async function Home() {
   const recentPosts = getRecentPosts(allPosts as Post[], 3)
+
+  // Fetch view counts for all recent posts in parallel
+  const viewCounts = await getViewCounts(recentPosts.map(post => post.slug))
 
   return (
     <div>
@@ -68,7 +72,11 @@ export default function Home() {
                     <time dateTime={post.date}>
                       {new Date(post.date).toLocaleDateString()}
                     </time>
-                    <ViewCount slug={post.slug} increment={false} />
+                    <ViewCount
+                      slug={post.slug}
+                      increment={false}
+                      initialViews={viewCounts.get(post.slug)}
+                    />
                   </div>
                 </Link>
               </article>

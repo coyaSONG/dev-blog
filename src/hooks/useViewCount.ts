@@ -13,17 +13,24 @@ interface UseViewCountReturn {
  * Custom hook to fetch and increment post view count
  * @param slug - The post slug to track views for
  * @param increment - Whether to increment view count on mount (default: true)
+ * @param initialViews - Initial view count from server (prevents loading state)
  * @returns View count, loading state, and error state
  */
 export function useViewCount(
   slug: string,
-  increment: boolean = true
+  increment: boolean = true,
+  initialViews?: number
 ): UseViewCountReturn {
-  const [views, setViews] = useState<number>(0);
-  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [views, setViews] = useState<number>(initialViews ?? 0);
+  const [isLoading, setIsLoading] = useState<boolean>(initialViews === undefined);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
+    // If we have initial views and don't need to increment, skip fetch
+    if (initialViews !== undefined && !increment) {
+      return;
+    }
+
     let isMounted = true;
 
     async function fetchAndIncrementViews() {
@@ -93,7 +100,7 @@ export function useViewCount(
     return () => {
       isMounted = false;
     };
-  }, [slug, increment]);
+  }, [slug, increment, initialViews]);
 
   return { views, isLoading, error };
 }

@@ -7,6 +7,7 @@ interface ViewCountProps {
   slug: string;
   increment?: boolean;
   className?: string;
+  initialViews?: number;
 }
 
 /**
@@ -14,13 +15,15 @@ interface ViewCountProps {
  * @param slug - Post slug to track views for
  * @param increment - Whether to increment view count on mount (default: true)
  * @param className - Additional CSS classes
+ * @param initialViews - Initial view count from server (prevents loading state)
  */
 export function ViewCount({
   slug,
   increment = true,
   className = '',
+  initialViews,
 }: ViewCountProps) {
-  const { views, isLoading, error } = useViewCount(slug, increment);
+  const { views, isLoading, error } = useViewCount(slug, increment, initialViews);
 
   // Silently fail if there's an error (don't show error to users)
   if (error) {
