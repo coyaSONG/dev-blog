@@ -7,7 +7,7 @@ import { Analytics } from "@vercel/analytics/react";
 import { ViewTransitions } from "next-view-transitions";
 
 const pretendard = localFont({
-  src: "../../public/fonts/Pretendard/PretendardVariable.woff2",
+  src: "../../fonts/Pretendard/PretendardVariable.woff2",
   variable: "--font-pretendard",
   display: "swap",
 });
@@ -15,15 +15,15 @@ const pretendard = localFont({
 const gmarketSans = localFont({
   src: [
     {
-      path: "../../public/fonts/GmarketSans/GmarketSansLight.woff2",
+      path: "../../fonts/GmarketSans/GmarketSansLight.woff2",
       weight: "300",
     },
     {
-      path: "../../public/fonts/GmarketSans/GmarketSansMedium.woff2",
+      path: "../../fonts/GmarketSans/GmarketSansMedium.woff2",
       weight: "500",
     },
     {
-      path: "../../public/fonts/GmarketSans/GmarketSansBold.woff2",
+      path: "../../fonts/GmarketSans/GmarketSansBold.woff2",
       weight: "700",
     },
   ],
