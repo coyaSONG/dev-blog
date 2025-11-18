@@ -1,9 +1,35 @@
 import { Metadata } from "next";
+import localFont from "next/font/local";
 import "./globals.css";
 import Header from "@/components/layout/Header";
 import { ThemeProvider } from "@/components/common/ThemeProvider";
 import { Analytics } from "@vercel/analytics/react";
 import { ViewTransitions } from "next-view-transitions";
+
+const pretendard = localFont({
+  src: "../../public/fonts/Pretendard/PretendardVariable.woff2",
+  variable: "--font-pretendard",
+  display: "swap",
+});
+
+const gmarketSans = localFont({
+  src: [
+    {
+      path: "../../public/fonts/GmarketSans/GmarketSansLight.woff2",
+      weight: "300",
+    },
+    {
+      path: "../../public/fonts/GmarketSans/GmarketSansMedium.woff2",
+      weight: "500",
+    },
+    {
+      path: "../../public/fonts/GmarketSans/GmarketSansBold.woff2",
+      weight: "700",
+    },
+  ],
+  variable: "--font-gmarket-sans",
+  display: "swap",
+});
 
 export const metadata: Metadata = {
   title: {
@@ -35,7 +61,7 @@ export default function RootLayout({
   return (
     <ViewTransitions>
       <html lang="ko" suppressHydrationWarning>
-        <body className="bg-white text-black dark:bg-gray-900 dark:text-white" style={{ fontFamily: '"Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, Roboto, sans-serif' }}>
+        <body className={`${pretendard.variable} ${gmarketSans.variable} bg-white text-black dark:bg-gray-900 dark:text-white`}>
           <ThemeProvider>
             <Header />
             <div className="container mx-auto px-4">
