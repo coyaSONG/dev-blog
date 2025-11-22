@@ -1,9 +1,10 @@
 import { MetadataRoute } from 'next'
 import { allPosts } from 'contentlayer2/generated'
 import type { Post } from '@/types/post'
+import { siteConfig } from '@/config/site'
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || siteConfig.url
 
   // Static pages
   const staticPages = [

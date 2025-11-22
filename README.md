@@ -116,4 +116,4 @@ MIT License
 **coyaSONG**
 
 - GitHub: [@coyaSONG](https://github.com/coyaSONG)
-- Blog: [https://blog.coyasong.dev](https://blog.coyasong.dev)
+- Blog: [https://coyasong.dev](https://coyasong.dev)
