@@ -12,8 +12,8 @@ const config: Config = {
   theme: {
     extend: {
       fontFamily: {
-        sans: ['"Pretendard Variable"', 'Pretendard', '-apple-system', 'BlinkMacSystemFont', 'system-ui', 'sans-serif'],
-        heading: ['"GmarketSans"', '"Pretendard Variable"', 'Pretendard', 'sans-serif'],
+        sans: ['var(--font-body)', '-apple-system', 'BlinkMacSystemFont', 'system-ui', 'sans-serif'],
+        heading: ['var(--font-heading)', 'var(--font-body)', '-apple-system', 'system-ui', 'sans-serif'],
       },
       colors: {
         brand: {

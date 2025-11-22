@@ -83,7 +83,7 @@ export default function Header() {
                 ))}
               </nav>
 
-              {/* Search and Theme Toggle - visible on all screens */}
+              {/* Search - visible on all screens */}
               <div className="flex items-center space-x-1">
                 <Button
                   onClick={handleSearchOpen}

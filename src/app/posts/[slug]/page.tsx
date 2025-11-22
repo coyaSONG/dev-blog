@@ -15,6 +15,7 @@ import { getViewCount } from '@/lib/views'
 import { getTagClasses } from '@/utils/styles'
 import { CopyButtonHandler } from '@/components/common/CopyButtonHandler'
 import { MDXContent } from '@/components/mdx/MDXContent'
+import { siteConfig } from '@/config/site'
 
 type Props = {
   params: Promise<{
@@ -33,8 +34,9 @@ export async function generateMetadata({ params }: Props) {
   const post = (allPosts as Post[]).find((post) => post.slug === resolvedParams.slug)
   if (!post) return {}
 
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || siteConfig.url
   const postUrl = `${siteUrl}/posts/${post.slug}`
+  const ogImage = `${siteUrl}/og?title=${encodeURIComponent(post.title)}&description=${encodeURIComponent(post.description)}`
 
   return {
     title: post.title,
@@ -49,11 +51,13 @@ export async function generateMetadata({ params }: Props) {
       publishedTime: post.date,
       authors: ['coyaSONG'],
       tags: post.tags,
+      images: [ogImage],
     },
     twitter: {
       card: 'summary_large_image',
       title: post.title,
       description: post.description,
+      images: [ogImage],
     },
   }
 }
@@ -110,9 +114,14 @@ export default async function PostPage({ params }: Props) {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
       <article className="prose dark:prose-invert mx-auto py-8">
-        <div className="mb-8 animate-fade-in">
-          <h1 className="mb-4 bg-gradient-to-r from-gray-900 to-gray-700 dark:from-white dark:to-gray-300 bg-clip-text text-transparent">{post.title}</h1>
-          <div className="flex flex-wrap items-center gap-4 text-sm text-gray-600 dark:text-gray-400 mb-4">
+        <div className="mb-12 animate-fade-in">
+          <h1 className="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-6 tracking-tight leading-tight">
+            {post.title}
+          </h1>
+          <p className="text-xl text-gray-600 dark:text-gray-300 mb-8 leading-relaxed">
+            {post.description}
+          </p>
+          <div className="flex flex-wrap items-center gap-4 text-sm text-gray-500 dark:text-gray-400 border-b border-gray-200 dark:border-gray-800 pb-8">
             <time dateTime={post.date}>
               {format(parseISO(post.date), 'PPP', { locale: ko })}
             </time>

@@ -90,32 +90,41 @@ export default async function Home() {
                 className={`group rounded-2xl border border-gray-200 dark:border-gray-800 ${getCardAccentColor(post.tags || [])} p-6 hover:shadow-lg transition-all duration-200 hover:-translate-y-1 hover:scale-[1.02] bg-white dark:bg-gray-900/50 backdrop-blur-sm animate-fade-in`}
                 style={{ animationDelay: `${index * 100}ms` }}
               >
-                <Link href={post.url}>
-                  <div className="flex flex-wrap gap-2 mb-4">
-                    {post.tags && post.tags.map((tag: string) => (
-                      <span
-                        key={tag}
-                        className={`px-3 py-1 rounded-full text-xs font-medium border ${getTagClasses(tag)} transition-transform group-hover:scale-105`}
-                      >
-                        {tag}
-                      </span>
-                    ))}
-                  </div>
-                  <h3 className="text-xl font-bold mb-3 group-hover:text-brand-primary dark:group-hover:text-brand-primary-light transition-colors line-clamp-2">
-                    {post.title}
-                  </h3>
-                  <p className="text-gray-600 dark:text-gray-400 mb-4 line-clamp-2 leading-relaxed">
-                    {post.description}
-                  </p>
-                  <div className="flex items-center gap-4 text-sm text-gray-500 dark:text-gray-500 pt-4 border-t border-gray-100 dark:border-gray-800">
+                <Link href={post.url} className="flex flex-col h-full">
+                  <div className="flex items-center gap-3 text-xs font-medium text-gray-500 dark:text-gray-500 mb-3">
                     <time dateTime={post.date}>
-                      {new Date(post.date).toLocaleDateString('ko-KR')}
+                      {new Date(post.date).toLocaleDateString('ko-KR', { year: 'numeric', month: 'long', day: 'numeric' })}
                     </time>
+                    <span className="w-0.5 h-0.5 bg-gray-300 dark:bg-gray-600 rounded-full" />
                     <ViewCount
                       slug={post.slug}
                       increment={false}
                       initialViews={viewCounts.get(post.slug)}
                     />
+                  </div>
+                  
+                  <h3 className="text-xl font-bold mb-3 group-hover:text-brand-primary dark:group-hover:text-brand-primary-light transition-colors line-clamp-2">
+                    {post.title}
+                  </h3>
+                  
+                  <p className="text-gray-600 dark:text-gray-400 mb-6 line-clamp-2 leading-relaxed text-sm flex-grow">
+                    {post.description}
+                  </p>
+
+                  <div className="flex flex-wrap items-center gap-2 mt-auto pt-4 border-t border-gray-100 dark:border-gray-800">
+                    {post.tags && post.tags.slice(0, 3).map((tag: string) => (
+                      <span
+                        key={tag}
+                        className={`px-2.5 py-0.5 rounded-md text-[11px] font-medium border ${getTagClasses(tag)} transition-transform group-hover:scale-105`}
+                      >
+                        {tag}
+                      </span>
+                    ))}
+                    {post.tags && post.tags.length > 3 && (
+                      <span className="text-xs text-gray-400 dark:text-gray-600 font-medium pl-1">
+                        +{post.tags.length - 3}
+                      </span>
+                    )}
                   </div>
                 </Link>
               </article>
