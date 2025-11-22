@@ -13,7 +13,7 @@ import { getRelatedPosts } from '@/utils/posts'
 import { extractHeadings } from '@/utils/toc'
 import { getViewCount } from '@/lib/views'
 import { getTagClasses } from '@/utils/styles'
-import { CopyButtonHandler } from '@/components/common/CopyButtonHandler'
+
 import { MDXContent } from '@/components/mdx/MDXContent'
 import { siteConfig } from '@/config/site'
 
@@ -108,7 +108,7 @@ export default async function PostPage({ params }: Props) {
     <>
       <ReadingProgress />
       <TableOfContents items={tocItems} />
-      <CopyButtonHandler />
+
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}

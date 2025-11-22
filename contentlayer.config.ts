@@ -3,17 +3,27 @@ import rehypePrettyCode from 'rehype-pretty-code'
 import rehypeSlug from 'rehype-slug'
 import { visit } from 'unist-util-visit'
 import type { Root, Element } from 'hast'
-import { rehypeCodeWrapper } from './src/utils/rehype-code-wrapper'
+
 
 interface RehypePrettyCodeOptions {
-  theme: string
+  theme: {
+    dark: string
+    light: string
+  }
+  keepBackground: boolean
+  defaultLang: string
   onVisitLine: (node: Element) => void
   onVisitHighlightedLine: (node: Element) => void
   onVisitHighlightedWord: (node: Element) => void
 }
 
 const rehypePrettyCodeOptions: RehypePrettyCodeOptions = {
-  theme: 'github-dark',
+  theme: {
+    dark: 'github-dark-dimmed',
+    light: 'github-light',
+  },
+  keepBackground: false,
+  defaultLang: 'plaintext',
   onVisitLine(node) {
     if (node.children.length === 0) {
       node.children = [{ type: 'text', value: ' ' }]
@@ -99,11 +109,10 @@ export default makeSource({
             const [codeEl] = node.children as CodeElement[]
             if (codeEl.tagName !== 'code') return
 
-            ;(node as CodeElement).raw = codeEl.value
+              ; (node as CodeElement).raw = codeEl.value
           }
         })
       },
-      rehypeCodeWrapper,
     ],
   },
 })

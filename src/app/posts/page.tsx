@@ -1,10 +1,9 @@
 import { allPosts } from 'contentlayer2/generated'
 import { Link } from 'next-view-transitions'
 import type { Post } from '@/types/post'
-import { ViewCount } from '@/components/ViewCount'
+import { PostCard } from '@/components/PostCard'
 import { sortPostsByDate, filterPostsByCategory, getSortedCategories } from '@/utils/posts'
 import { getViewCounts } from '@/lib/views'
-import { getTagClasses, getCardAccentColor } from '@/utils/styles'
 
 export const metadata = {
   title: '블로그 포스트',
@@ -41,11 +40,10 @@ export default async function PostsPage({ searchParams }: PostsPageProps) {
       <div className="mb-12 flex flex-wrap gap-3">
         <Link
           href="/posts"
-          className={`px-5 py-2.5 rounded-2xl transition-all duration-200 font-medium ${
-            !selectedCategory
-              ? 'bg-brand-primary text-white shadow-md hover:shadow-lg hover:scale-[1.02]'
-              : 'bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 hover:scale-[1.02]'
-          }`}
+          className={`px-5 py-2.5 rounded-2xl transition-all duration-200 font-medium ${!selectedCategory
+            ? 'bg-brand-primary text-white shadow-md hover:shadow-lg hover:scale-[1.02]'
+            : 'bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 hover:scale-[1.02]'
+            }`}
         >
           전체 ({allSortedPosts.length})
         </Link>
@@ -53,11 +51,10 @@ export default async function PostsPage({ searchParams }: PostsPageProps) {
           <Link
             key={name}
             href={`/posts?category=${encodeURIComponent(name)}`}
-            className={`px-5 py-2.5 rounded-2xl transition-all duration-200 font-medium ${
-              selectedCategory === name
-                ? 'bg-brand-primary text-white shadow-md hover:shadow-lg hover:scale-[1.02]'
-                : 'bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 hover:scale-[1.02]'
-            }`}
+            className={`px-5 py-2.5 rounded-2xl transition-all duration-200 font-medium ${selectedCategory === name
+              ? 'bg-brand-primary text-white shadow-md hover:shadow-lg hover:scale-[1.02]'
+              : 'bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 hover:scale-[1.02]'
+              }`}
           >
             {name} ({count})
           </Link>
@@ -74,56 +71,12 @@ export default async function PostsPage({ searchParams }: PostsPageProps) {
       ) : (
         <div className="grid gap-6 md:grid-cols-2">
           {posts.map((post, index) => (
-            <article
+            <PostCard
               key={post._id}
-              className={`group rounded-2xl border border-gray-200 dark:border-gray-800 ${getCardAccentColor(post.tags || [])} p-6 hover:shadow-lg transition-all duration-200 hover:-translate-y-1 hover:scale-[1.02] bg-white dark:bg-gray-900/50 backdrop-blur-sm animate-fade-in`}
-              style={{
-                viewTransitionName: 'post-card',
-                animationDelay: `${index * 50}ms`
-              } as React.CSSProperties}
-            >
-              <Link href={post.url}>
-                {/* 카테고리 표시 */}
-                {post.category && (
-                  <div className="mb-3">
-                    <span className="px-3 py-1 rounded-full text-xs font-medium bg-accent-css/10 dark:bg-accent-css/20 text-accent-css border border-accent-css/30">
-                      {post.category}
-                    </span>
-                  </div>
-                )}
-
-                {/* 태그 표시 */}
-                {post.tags && post.tags.length > 0 && (
-                  <div className="flex flex-wrap gap-2 mb-4">
-                    {post.tags.map((tag) => (
-                      <span
-                        key={tag}
-                        className={`px-3 py-1 rounded-full text-xs font-medium border ${getTagClasses(tag)} transition-transform duration-200 group-hover:scale-105`}
-                      >
-                        {tag}
-                      </span>
-                    ))}
-                  </div>
-                )}
-
-                <h2 className="text-2xl font-bold mb-3 group-hover:text-brand-primary dark:group-hover:text-brand-primary-light transition-colors duration-200 line-clamp-2 font-heading">
-                  {post.title}
-                </h2>
-                <p className="text-gray-600 dark:text-gray-400 mb-4 line-clamp-2 leading-relaxed">
-                  {post.description}
-                </p>
-                <div className="flex items-center gap-4 text-sm text-gray-500 dark:text-gray-500 pt-4 border-t border-gray-100 dark:border-gray-800">
-                  <time dateTime={post.date}>
-                    {new Date(post.date).toLocaleDateString('ko-KR')}
-                  </time>
-                  <ViewCount
-                    slug={post.slug}
-                    increment={false}
-                    initialViews={viewCounts.get(post.slug)}
-                  />
-                </div>
-              </Link>
-            </article>
+              post={post}
+              viewCount={viewCounts.get(post.slug)}
+              index={index}
+            />
           ))}
         </div>
       )}
