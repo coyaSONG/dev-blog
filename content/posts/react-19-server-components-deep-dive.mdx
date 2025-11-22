@@ -1,0 +1,310 @@
+---
+title: "React 19 Server Components 심층 분석: 서버 우선 아키텍처의 실체"
+date: 2025-11-18
+description: "React Server Components가 프론트엔드 아키텍처를 어떻게 바꾸는지, 실제 성능 수치와 함께 핵심 개념부터 실전 패턴까지 깊이 있게 살펴봅니다."
+category: "Frontend"
+tags:
+  - React
+  - React 19
+  - Server Components
+  - Next.js
+  - Performance
+  - Web Development
+---
+
+# React 19 Server Components 심층 분석
+
+## TL;DR
+
+- **핵심 개념**: 서버에서만 실행되고 재렌더링되지 않는 컴포넌트로, 클라이언트 번들 크기를 제로에 가깝게 줄임
+- **실제 성과**: Dagster는 RSC 도입으로 20배 속도 향상 달성
+- **PPR의 등장**: Next.js 15의 Partial Prerendering으로 정적/동적 콘텐츠의 완벽한 조화
+- **실무 핵심**: 서버 컴포넌트와 클라이언트 컴포넌트의 경계를 명확히 설계하는 것이 성공의 열쇠
+
+## 왜 Server Components인가?
+
+React 19(2024년 12월 5일 출시)는 React Server Components(RSC)를 정식 기능으로 도입했다. State of JS 2024 설문조사(14,015명 응답)에 따르면 React는 여전히 81.1%의 사용률을 기록하지만, 개발자들의 **복잡성에 대한 불만**도 함께 증가하고 있다.
+
+전통적인 CSR(Client-Side Rendering)의 문제점을 살펴보자:
+
+```
+전통적인 CSR 흐름:
+Browser → API Request → Server → JSON Response → Browser (렌더링)
+         ↓
+    문제점:
+    - 복잡한 상태 관리 (loading, error, data 모두 관리)
+    - 큰 번들 크기 (데이터 처리 로직까지 클라이언트에)
+    - 폭포수 요청 (컴포넌트 렌더링 → API 호출 → 자식 렌더링 → 다시 API 호출...)
+```
+
+RSC는 이 문제를 근본적으로 해결한다:
+
+```
+RSC 흐름:
+Browser → Server (RSC 실행 + 데이터 페칭) → 직렬화된 UI → Browser (하이드레이션)
+         ↓
+    해결:
+    - 서버에서 데이터 처리 완료
+    - 클라이언트 번들 최소화
+    - 병렬 데이터 페칭
+```
+
+## RSC의 핵심 개념
+
+RSC의 핵심은 단순하다: **서버에서만 실행되며, 클라이언트로 JavaScript가 전송되지 않는 컴포넌트**다.
+
+### 서버 컴포넌트 vs 클라이언트 컴포넌트
+
+| 특성 | 서버 컴포넌트 | 클라이언트 컴포넌트 |
+|------|--------------|-------------------|
+| 실행 위치 | 서버만 | 서버 + 클라이언트 |
+| JS 번들 포함 | ❌ | ✅ |
+| 상태(useState) | ❌ | ✅ |
+| 이벤트 핸들러 | ❌ | ✅ |
+| DB/파일 직접 접근 | ✅ | ❌ |
+| async/await | ✅ | ❌ |
+
+### 실전 코드: 제품 상세 페이지
+
+이 패턴이 실제로 어떻게 적용되는지 보자:
+
+```typescript
+// app/product/[id]/page.tsx - Server Component
+interface Product {
+  id: string;
+  name: string;
+  price: number;
+  description: string;
+}
+
+interface Review {
+  id: string;
+  rating: number;
+  comment: string;
+  author: string;
+}
+
+async function ProductPage({ params }: { params: { id: string } }) {
+  // 서버에서만 실행 - 클라이언트에 이 코드는 전송되지 않음
+  // Promise.all로 병렬 페칭 - 폭포수 요청 제거
+  const [product, reviews] = await Promise.all([
+    db.products.findById(params.id) as Promise<Product>,
+    db.reviews.findByProduct(params.id) as Promise<Review[]>
+  ]);
+
+  return (
+    <div className="product-container">
+      <h1>{product.name}</h1>
+      {/* 정적 콘텐츠는 서버 컴포넌트로 */}
+      <ProductDetails product={product} />
+      <ReviewList reviews={reviews} />
+      {/* 상호작용이 필요한 부분만 클라이언트로 분리 */}
+      <AddToCartButton productId={product.id} />
+    </div>
+  );
+}
+```
+
+클라이언트 컴포넌트는 상호작용만 담당한다:
+
+```typescript
+// components/AddToCartButton.tsx - Client Component
+'use client';
+
+import { useTransition } from 'react';
+import { useCartStore } from '@/store/cart';
+
+interface AddToCartButtonProps {
+  productId: string;
+}
+
+export function AddToCartButton({ productId }: AddToCartButtonProps) {
+  const [isPending, startTransition] = useTransition();
+  const addItem = useCartStore(state => state.addItem);
+
+  const handleClick = () => {
+    startTransition(() => {
+      addItem(productId);
+    });
+  };
+
+  return (
+    <button
+      onClick={handleClick}
+      disabled={isPending}
+      className="add-to-cart-btn"
+      aria-busy={isPending}
+    >
+      {isPending ? '추가 중...' : '장바구니 담기'}
+    </button>
+  );
+}
+```
+
+**핵심 원칙**: 데이터 페칭과 정적 콘텐츠는 서버 컴포넌트, 상태와 이벤트 핸들러는 클라이언트 컴포넌트.
+
+## 번들 크기 감소 효과
+
+RSC의 가장 직접적인 효과는 클라이언트 번들 크기 감소다:
+
+```
+Before RSC (모든 의존성이 클라이언트로):
+├── 마크다운 파서: 75KB
+├── Syntax Highlighter: 120KB
+├── Date Formatter: 30KB
+└── 총 추가 번들: 225KB
+
+After RSC (서버에서만 실행):
+├── 마크다운 파서: 서버에서 처리
+├── Syntax Highlighter: 서버에서 처리
+├── Date Formatter: 서버에서 처리
+└── 클라이언트 번들 증가: 0KB
+```
+
+### 실제 사례: Dagster
+
+Dagster 팀은 dbt 문서를 RSC로 마이그레이션하여 **20배의 속도 향상**을 달성했다. 대량의 정적 콘텐츠를 서버에서 렌더링하고, 필요한 부분만 클라이언트에서 하이드레이션하는 패턴이 효과적이었다.
+
+## Partial Prerendering: 정적과 동적의 조화
+
+Next.js 15는 PPR(Partial Prerendering)을 도입해 RSC를 한 단계 더 발전시켰다. PPR은 **한 라우트에서 정적 렌더링과 동적 렌더링을 동시에 활용**한다.
+
+```typescript
+// app/product/[id]/layout.tsx
+export const experimental_ppr = true;
+
+export default function ProductLayout({
+  children
+}: {
+  children: React.ReactNode
+}) {
+  return (
+    <div className="product-layout">
+      {/* 정적 셸: 빌드 타임에 생성, 즉시 전송 */}
+      <Header />
+      <Sidebar />
+
+      {/* 동적 콘텐츠: 요청 시 스트리밍 */}
+      <Suspense fallback={<ProductSkeleton />}>
+        {children}
+      </Suspense>
+
+      <Footer />
+    </div>
+  );
+}
+```
+
+### PPR의 로딩 타임라인
+
+```
+0ms    → 정적 셸 전송 (Header, Sidebar, Footer)
+100ms  → 사용자가 레이아웃 확인 가능
+200ms  → 동적 콘텐츠 스트리밍 시작
+500ms  → 전체 페이지 완성
+
+vs 전통적 SSR:
+0ms    → 서버에서 모든 데이터 페칭
+400ms  → 렌더링 완료
+500ms  → 한 번에 전체 HTML 전송 (그 전까지 빈 화면)
+```
+
+### 성능 개선 수치
+
+| 지표 | 전통적 CSR | SSR | PPR (RSC) |
+|------|-----------|-----|-----------|
+| LCP | 3.2초 | 1.8초 | **1.2초** |
+| TTI | 4.5초 | 2.5초 | **1.5초** |
+| TTFB | 800ms | 400ms | **200ms** |
+
+## 흔한 실수와 해결법
+
+### 실수 1: Server Component에서 상태 사용
+
+```typescript
+// ❌ 에러 발생
+async function ServerPage() {
+  const [count, setCount] = useState(0); // Server Component에서 사용 불가!
+  return <div>{count}</div>;
+}
+
+// ✅ 해결: 상태가 필요한 부분만 분리
+async function ServerPage() {
+  const data = await fetchData();
+  return (
+    <div>
+      <StaticContent data={data} />
+      <InteractiveCounter /> {/* 'use client' 컴포넌트 */}
+    </div>
+  );
+}
+```
+
+### 실수 2: Server → Client로 함수 전달
+
+```typescript
+// ❌ 함수는 직렬화 불가능
+async function ServerComponent() {
+  const handleClick = () => console.log('clicked');
+  return <ClientButton onClick={handleClick} />; // 에러!
+}
+
+// ✅ 해결: Server Action 사용
+async function ServerComponent() {
+  async function handleSubmit(formData: FormData) {
+    'use server';
+    await saveToDatabase(formData);
+  }
+
+  return <ClientForm action={handleSubmit} />;
+}
+```
+
+### 실수 3: 불필요한 'use client'
+
+```typescript
+// ❌ 상호작용이 없는데 클라이언트 컴포넌트로 선언
+'use client';
+function ProductCard({ product }) {
+  return (
+    <div>
+      <h3>{product.name}</h3>
+      <p>{product.price}</p>
+    </div>
+  );
+}
+
+// ✅ 서버 컴포넌트로 유지 (기본값)
+function ProductCard({ product }) {
+  return (
+    <div>
+      <h3>{product.name}</h3>
+      <p>{product.price}</p>
+    </div>
+  );
+}
+```
+
+## 도입 체크리스트
+
+RSC를 프로젝트에 도입할 때 확인해야 할 사항:
+
+- [ ] Next.js 13.4+ 또는 React 19 환경 준비
+- [ ] 기존 컴포넌트를 서버/클라이언트로 분류
+- [ ] 데이터 페칭 로직을 서버 컴포넌트로 이동
+- [ ] 'use client'를 가능한 한 트리 하단에 배치
+- [ ] Suspense 경계로 로딩 상태 처리
+- [ ] Server Action으로 폼 제출 처리
+
+## 마치며
+
+React Server Components는 단순한 기능 추가가 아니라 **프론트엔드 아키텍처의 패러다임 전환**이다. 핵심은 "무엇이 서버에서 실행되어야 하고, 무엇이 클라이언트에서 실행되어야 하는가"를 명확히 구분하는 것이다.
+
+다음 글에서는 RSC와 함께 2025년 프론트엔드를 정의하는 또 다른 축인 **Rust 기반 빌드 도구**에 대해 다룰 예정이다.
+
+---
+
+**시리즈 안내**
+- 현재 글: React 19 Server Components 심층 분석
+- 다음 글: [Rust 빌드 도구 마이그레이션 완전 가이드](/posts/rust-build-tools-migration-guide)
+- 다음 글: [2025 상태 관리 베스트 프랙티스](/posts/2025-state-management-best-practices)

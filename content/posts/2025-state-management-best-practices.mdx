@@ -1,0 +1,485 @@
+---
+title: "2025 상태 관리 베스트 프랙티스: TanStack Query + Zustand 조합의 힘"
+date: 2025-11-22
+description: "Redux의 보일러플레이트에서 벗어나 TanStack Query와 Zustand로 80% 코드를 줄이는 현대적 상태 관리 패턴을 실전 예제와 함께 알아봅니다."
+category: "Frontend"
+tags:
+  - React
+  - State Management
+  - TanStack Query
+  - Zustand
+  - TypeScript
+  - Best Practices
+---
+
+# 2025 상태 관리 베스트 프랙티스
+
+## TL;DR
+
+- **핵심 패턴**: 서버 상태는 TanStack Query, 클라이언트 상태는 Zustand
+- **보일러플레이트 감소**: Redux 대비 80% 코드 감소
+- **자동화된 동기화**: 캐싱, 재시도, 낙관적 업데이트가 기본 제공
+- **핵심 원칙**: "상태의 종류를 구분하고, 각각에 맞는 도구를 사용하라"
+
+## 상태의 두 가지 종류
+
+2025년 상태 관리의 핵심 인사이트는 **상태를 두 가지로 구분**하는 것이다:
+
+| 종류 | 특성 | 예시 | 최적 도구 |
+|------|------|------|----------|
+| **서버 상태** | 원격 데이터, 캐싱 필요, 동기화 필요 | 사용자 정보, 상품 목록, 주문 내역 | TanStack Query |
+| **클라이언트 상태** | 로컬 UI 상태, 즉각적 반영 | 모달 열림, 테마, 장바구니 | Zustand |
+
+Redux가 모든 상태를 하나의 스토어에 담으려 했다면, 현대적 접근법은 **상태의 성격에 맞는 전문 도구**를 조합하는 것이다.
+
+## TanStack Query: 서버 상태의 자동 동기화
+
+### 기본 사용법
+
+`useEffect` + `useState` 패턴과 비교해보자:
+
+```typescript
+// ❌ Before: useEffect + useState (30줄)
+function UserProfile({ userId }: { userId: string }) {
+  const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    let cancelled = false;
+    setLoading(true);
+
+    fetch(`/api/users/${userId}`)
+      .then(res => res.json())
+      .then(data => {
+        if (!cancelled) {
+          setUser(data);
+          setLoading(false);
+        }
+      })
+      .catch(err => {
+        if (!cancelled) {
+          setError(err);
+          setLoading(false);
+        }
+      });
+
+    return () => { cancelled = true; };
+  }, [userId]);
+
+  if (loading) return <Spinner />;
+  if (error) return <ErrorMessage error={error} />;
+  return <div>{user.name}</div>;
+}
+```
+
+```typescript
+// ✅ After: TanStack Query (10줄)
+function UserProfile({ userId }: { userId: string }) {
+  const { data: user, isLoading, error } = useQuery({
+    queryKey: ['user', userId],
+    queryFn: () => fetch(`/api/users/${userId}`).then(res => res.json()),
+    staleTime: 5 * 60 * 1000, // 5분간 fresh
+  });
+
+  if (isLoading) return <Spinner />;
+  if (error) return <ErrorMessage error={error} />;
+  return <div>{user.name}</div>;
+}
+```
+
+코드가 66% 줄었을 뿐 아니라, **자동 캐싱, 재시도, 백그라운드 리페칭**이 기본 제공된다.
+
+### 실전 패턴: 제품 CRUD
+
+```typescript
+// hooks/useProduct.ts
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+
+interface Product {
+  id: string;
+  name: string;
+  price: number;
+  stock: number;
+}
+
+// 조회: 자동 캐싱과 재검증
+export function useProduct(id: string) {
+  return useQuery({
+    queryKey: ['product', id],
+    queryFn: () => api.get<Product>(`/products/${id}`),
+    staleTime: 5 * 60 * 1000,  // 5분간 fresh 상태 유지
+    gcTime: 10 * 60 * 1000,    // 10분간 캐시 유지
+    retry: 3,                   // 실패 시 3번 재시도
+  });
+}
+
+// 목록 조회: 페이지네이션 지원
+export function useProducts(page: number, limit: number) {
+  return useQuery({
+    queryKey: ['products', { page, limit }],
+    queryFn: () => api.get<Product[]>(`/products?page=${page}&limit=${limit}`),
+    placeholderData: (previousData) => previousData, // 페이지 전환 시 이전 데이터 유지
+  });
+}
+
+// 수정: 낙관적 업데이트
+export function useUpdateProduct() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (data: Partial<Product> & { id: string }) =>
+      api.patch<Product>(`/products/${data.id}`, data),
+
+    // 서버 응답 전에 UI 즉시 반영
+    onMutate: async (newProduct) => {
+      // 진행 중인 refetch 취소 (충돌 방지)
+      await queryClient.cancelQueries({
+        queryKey: ['product', newProduct.id]
+      });
+
+      // 현재 데이터 백업 (롤백용)
+      const previousProduct = queryClient.getQueryData<Product>(
+        ['product', newProduct.id]
+      );
+
+      // 낙관적 업데이트 적용
+      queryClient.setQueryData<Product>(
+        ['product', newProduct.id],
+        (old) => ({ ...old!, ...newProduct })
+      );
+
+      return { previousProduct };
+    },
+
+    // 에러 시 롤백
+    onError: (err, newProduct, context) => {
+      queryClient.setQueryData(
+        ['product', newProduct.id],
+        context?.previousProduct
+      );
+    },
+
+    // 완료 후 서버 데이터로 동기화
+    onSettled: (data, error, variables) => {
+      queryClient.invalidateQueries({
+        queryKey: ['product', variables.id]
+      });
+      queryClient.invalidateQueries({
+        queryKey: ['products']
+      });
+    }
+  });
+}
+```
+
+### 낙관적 업데이트 흐름도
+
+```
+사용자 클릭 "저장"
+       ↓
+[onMutate] UI 즉시 업데이트 (낙관적)
+       ↓
+서버 요청 전송
+       ↓
+    ┌──────┴──────┐
+ 성공              실패
+    ↓                ↓
+[onSettled]    [onError]
+서버 데이터로    이전 상태로
+동기화           롤백
+```
+
+**사용자 경험**: 버튼 클릭 즉시 UI가 반영되어 앱이 빠르게 느껴진다.
+
+## Zustand: 미니멀한 클라이언트 상태
+
+Redux의 가장 큰 불만은 보일러플레이트였다. Action 타입 정의, Action Creator, Reducer... Zustand는 이 모든 것을 단순화한다.
+
+### 기본 사용법
+
+```typescript
+// store/cart.ts
+import { create } from 'zustand';
+import { devtools, persist } from 'zustand/middleware';
+import { immer } from 'zustand/middleware/immer';
+
+interface CartItem {
+  productId: string;
+  quantity: number;
+  price: number;
+}
+
+interface CartState {
+  items: CartItem[];
+  addItem: (productId: string, price: number) => void;
+  removeItem: (productId: string) => void;
+  updateQuantity: (productId: string, quantity: number) => void;
+  clearCart: () => void;
+  getTotalPrice: () => number;
+  getTotalItems: () => number;
+}
+
+export const useCartStore = create<CartState>()(
+  devtools(
+    persist(
+      immer((set, get) => ({
+        items: [],
+
+        addItem: (productId, price) => set((state) => {
+          const existingItem = state.items.find(
+            item => item.productId === productId
+          );
+          if (existingItem) {
+            existingItem.quantity += 1;
+          } else {
+            state.items.push({ productId, quantity: 1, price });
+          }
+        }),
+
+        removeItem: (productId) => set((state) => {
+          state.items = state.items.filter(
+            item => item.productId !== productId
+          );
+        }),
+
+        updateQuantity: (productId, quantity) => set((state) => {
+          const item = state.items.find(
+            item => item.productId === productId
+          );
+          if (item) {
+            item.quantity = quantity;
+          }
+        }),
+
+        clearCart: () => set({ items: [] }),
+
+        getTotalPrice: () => {
+          return get().items.reduce(
+            (total, item) => total + (item.price * item.quantity),
+            0
+          );
+        },
+
+        getTotalItems: () => {
+          return get().items.reduce(
+            (total, item) => total + item.quantity,
+            0
+          );
+        }
+      })),
+      {
+        name: 'cart-storage', // localStorage 키
+        partialize: (state) => ({ items: state.items }) // items만 저장
+      }
+    ),
+    { name: 'CartStore' } // Redux DevTools 이름
+  )
+);
+```
+
+### 셀렉터로 리렌더링 최적화
+
+```typescript
+// ❌ 전체 스토어 구독 (items 외 변경에도 리렌더링)
+function CartIcon() {
+  const store = useCartStore();
+  return <span>{store.getTotalItems()}</span>;
+}
+
+// ✅ 필요한 값만 구독 (정확한 리렌더링)
+function CartIcon() {
+  const totalItems = useCartStore(state => state.getTotalItems());
+  return <span>{totalItems}</span>;
+}
+
+// ✅ 커스텀 훅으로 추출
+export const useCartItemCount = () =>
+  useCartStore(state => state.getTotalItems());
+
+export const useCartTotalPrice = () =>
+  useCartStore(state => state.getTotalPrice());
+```
+
+## 실전 조합: 제품 카드 컴포넌트
+
+두 도구를 함께 사용하는 실전 예제:
+
+```typescript
+// components/ProductCard.tsx
+'use client';
+
+import { useProduct, useUpdateProduct } from '@/hooks/useProduct';
+import { useCartStore } from '@/store/cart';
+
+interface ProductCardProps {
+  productId: string;
+}
+
+export function ProductCard({ productId }: ProductCardProps) {
+  // 서버 상태: TanStack Query
+  const { data: product, isLoading, error } = useProduct(productId);
+  const updateProduct = useUpdateProduct();
+
+  // 클라이언트 상태: Zustand
+  const addToCart = useCartStore(state => state.addItem);
+
+  if (isLoading) return <ProductSkeleton />;
+  if (error) return <ErrorMessage error={error} />;
+  if (!product) return null;
+
+  const handleAddToCart = () => {
+    // 1. 로컬 장바구니에 추가 (즉시)
+    addToCart(product.id, product.price);
+
+    // 2. 서버 재고 감소 (낙관적 업데이트)
+    updateProduct.mutate({
+      id: product.id,
+      stock: product.stock - 1
+    });
+  };
+
+  return (
+    <div className="product-card">
+      <h3>{product.name}</h3>
+      <p className="price">${product.price}</p>
+      <p className="stock">재고: {product.stock}개</p>
+
+      <button
+        onClick={handleAddToCart}
+        disabled={product.stock === 0 || updateProduct.isPending}
+        aria-busy={updateProduct.isPending}
+      >
+        {updateProduct.isPending ? '추가 중...' : '장바구니 담기'}
+      </button>
+    </div>
+  );
+}
+```
+
+### 상태 역할 분담 정리
+
+```
+┌─────────────────────────────────────────────────────┐
+│                    ProductCard                       │
+├─────────────────────────────────────────────────────┤
+│  TanStack Query (서버 상태)                          │
+│  ├── product 데이터                                  │
+│  ├── isLoading, error 상태                          │
+│  ├── 자동 캐싱 & 백그라운드 리페칭                    │
+│  └── 낙관적 업데이트 & 롤백                          │
+├─────────────────────────────────────────────────────┤
+│  Zustand (클라이언트 상태)                           │
+│  ├── 장바구니 아이템                                 │
+│  ├── localStorage 자동 동기화                       │
+│  └── 즉각적인 UI 반영                               │
+└─────────────────────────────────────────────────────┘
+```
+
+## 자주 발생하는 문제와 해결법
+
+### 문제 1: 불필요한 리페칭
+
+```typescript
+// ❌ staleTime 미설정 (매번 리페칭)
+const { data } = useQuery({
+  queryKey: ['user'],
+  queryFn: fetchUser,
+});
+
+// ✅ 적절한 staleTime 설정
+const { data } = useQuery({
+  queryKey: ['user'],
+  queryFn: fetchUser,
+  staleTime: 5 * 60 * 1000, // 5분간 fresh
+  gcTime: 10 * 60 * 1000,   // 10분간 캐시 유지
+});
+```
+
+### 문제 2: 낙관적 업데이트 후 깜빡임
+
+```typescript
+// ❌ 잘못된 순서
+onMutate: async (newData) => {
+  // 이전 데이터 백업을 먼저!
+  const previous = queryClient.getQueryData(['todos']);
+  // 그 다음 업데이트
+  queryClient.setQueryData(['todos'], newData);
+  return { previous };
+}
+
+// ✅ 올바른 순서 (cancelQueries 추가)
+onMutate: async (newData) => {
+  // 1. 진행 중인 쿼리 취소
+  await queryClient.cancelQueries({ queryKey: ['todos'] });
+  // 2. 이전 데이터 백업
+  const previous = queryClient.getQueryData(['todos']);
+  // 3. 낙관적 업데이트
+  queryClient.setQueryData(['todos'], newData);
+  return { previous };
+}
+```
+
+### 문제 3: Zustand 상태가 SSR에서 불일치
+
+```typescript
+// ❌ 서버/클라이언트 상태 불일치
+const items = useCartStore(state => state.items);
+// SSR: [] (서버에는 localStorage 없음)
+// CSR: [item1, item2] (localStorage에서 복원)
+// → 하이드레이션 에러!
+
+// ✅ 클라이언트에서만 렌더링
+const [mounted, setMounted] = useState(false);
+useEffect(() => setMounted(true), []);
+
+const items = useCartStore(state => state.items);
+
+if (!mounted) return <CartSkeleton />; // 서버에서는 스켈레톤
+return <CartItems items={items} />;
+```
+
+## 마이그레이션 체크리스트
+
+Redux에서 마이그레이션하는 경우:
+
+```markdown
+### 1단계: 상태 분류
+- [ ] 기존 Redux 상태를 서버/클라이언트로 분류
+- [ ] API 호출 관련 → TanStack Query 후보
+- [ ] UI 상태, 로컬 데이터 → Zustand 후보
+
+### 2단계: TanStack Query 도입
+- [ ] @tanstack/react-query 설치
+- [ ] QueryClientProvider 설정
+- [ ] API 호출을 useQuery/useMutation으로 변환
+- [ ] 캐싱 전략 설정 (staleTime, gcTime)
+
+### 3단계: Zustand 도입
+- [ ] zustand 설치
+- [ ] 클라이언트 상태를 Zustand 스토어로 이동
+- [ ] 필요시 persist, devtools 미들웨어 추가
+- [ ] 셀렉터로 리렌더링 최적화
+
+### 4단계: Redux 제거
+- [ ] 모든 상태 마이그레이션 확인
+- [ ] redux, react-redux, @reduxjs/toolkit 제거
+- [ ] 관련 보일러플레이트 코드 삭제
+```
+
+## 마치며
+
+상태 관리의 핵심은 **적재적소**다. 모든 상태를 하나의 도구로 관리하려는 욕심을 버리고, 상태의 성격에 맞는 전문 도구를 선택하자.
+
+- **서버에서 오는 데이터** → TanStack Query (캐싱, 동기화, 재시도 자동화)
+- **브라우저에만 존재하는 상태** → Zustand (간결함, 성능, 유연성)
+- **URL에 반영되어야 하는 상태** → useSearchParams (필터, 정렬, 페이지)
+
+이 조합으로 Redux 대비 80%의 코드를 줄이면서도 더 나은 사용자 경험을 제공할 수 있다.
+
+---
+
+**시리즈 안내**
+- 이전 글: [React 19 Server Components 심층 분석](/posts/react-19-server-components-deep-dive)
+- 이전 글: [Rust 빌드 도구 마이그레이션 완전 가이드](/posts/rust-build-tools-migration-guide)
+- 현재 글: 2025 상태 관리 베스트 프랙티스
