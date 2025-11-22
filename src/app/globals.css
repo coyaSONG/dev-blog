@@ -1,4 +1,5 @@
-@import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable.min.css');
+/* Self-hosted fonts via npm packages (Turbopack compatible) */
+@import 'pretendard/dist/web/variable/pretendardvariable.css';
 @import url('https://cdn.jsdelivr.net/gh/fonts-archive/GmarketSans/GmarketSans.css');
 
 @tailwind base;
