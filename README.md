@@ -58,7 +58,7 @@ npm start
 dev-blog/
 ├── content/posts/          # MDX 블로그 포스트
 ├── src/
-│   ├── app/               # Next.js 15 App Router
+│   ├── app/               # Next.js 16 App Router
 │   │   ├── page.tsx       # 홈페이지
 │   │   ├── posts/         # 블로그 페이지
 │   │   └── layout.tsx     # 루트 레이아웃
