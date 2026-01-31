@@ -1,4 +1,9 @@
-import { kv } from '@vercel/kv'
+import { Redis } from '@upstash/redis'
+
+const redis = new Redis({
+  url: process.env.KV_REST_API_URL!,
+  token: process.env.KV_REST_API_TOKEN!,
+})
 
 /**
  * Server-side function to get view count for a post
@@ -7,7 +12,7 @@ import { kv } from '@vercel/kv'
  */
 export async function getViewCount(slug: string): Promise<number> {
   try {
-    const views = await kv.get<number>(`views:${slug}`)
+    const views = await redis.get<number>(`views:${slug}`)
     return views ?? 0
   } catch (error) {
     console.error('Error fetching view count:', error)
@@ -27,7 +32,7 @@ export async function getViewCounts(slugs: string[]): Promise<Map<string, number
     // Fetch all view counts in parallel
     const results = await Promise.all(
       slugs.map(async (slug) => {
-        const views = await kv.get<number>(`views:${slug}`)
+        const views = await redis.get<number>(`views:${slug}`)
         return { slug, views: views ?? 0 }
       })
     )

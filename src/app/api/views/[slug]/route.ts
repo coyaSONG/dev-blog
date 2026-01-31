@@ -1,6 +1,11 @@
-import { kv } from '@vercel/kv';
+import { Redis } from '@upstash/redis';
 import { NextRequest, NextResponse } from 'next/server';
 import type { ViewsApiResponse } from '@/types/views';
+
+const redis = new Redis({
+  url: process.env.KV_REST_API_URL!,
+  token: process.env.KV_REST_API_TOKEN!,
+});
 
 /**
  * Bot User-Agent patterns to filter out
@@ -60,7 +65,7 @@ export async function GET(
       );
     }
 
-    const views = (await kv.get<number>(`views:${slug}`)) ?? 0;
+    const views = (await redis.get<number>(`views:${slug}`)) ?? 0;
 
     return NextResponse.json<ViewsApiResponse>({
       views,
@@ -98,7 +103,7 @@ export async function POST(
     const userAgent = request.headers.get('user-agent');
     if (isBot(userAgent)) {
       // Return current views without incrementing for bots
-      const views = (await kv.get<number>(`views:${slug}`)) ?? 0;
+      const views = (await redis.get<number>(`views:${slug}`)) ?? 0;
       return NextResponse.json<ViewsApiResponse>({
         views,
         success: true,
@@ -108,11 +113,11 @@ export async function POST(
     // Duplicate prevention: Check if IP already viewed within 1 minute
     const clientIp = getClientIp(request);
     const ipKey = `ip:${slug}:${clientIp}`;
-    const hasViewed = await kv.get(ipKey);
+    const hasViewed = await redis.get(ipKey);
 
     if (hasViewed) {
       // Return current views without incrementing for duplicate visits
-      const views = (await kv.get<number>(`views:${slug}`)) ?? 0;
+      const views = (await redis.get<number>(`views:${slug}`)) ?? 0;
       return NextResponse.json<ViewsApiResponse>({
         views,
         success: true,
@@ -120,10 +125,10 @@ export async function POST(
     }
 
     // Increment view count
-    const views = await kv.incr(`views:${slug}`);
+    const views = await redis.incr(`views:${slug}`);
 
     // Set IP flag with 60 second expiration
-    await kv.set(ipKey, '1', { ex: 60 });
+    await redis.set(ipKey, '1', { ex: 60 });
 
     return NextResponse.json<ViewsApiResponse>({
       views,
