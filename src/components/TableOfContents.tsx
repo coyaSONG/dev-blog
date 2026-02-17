@@ -120,8 +120,8 @@ export default function TableOfContents({ items }: TableOfContentsProps) {
                       href={`#${item.id}`}
                       onClick={(e) => handleClick(e, item.id)}
                       className={`block py-1 border-l-2 pl-3 transition-colors ${activeId === item.id
-                          ? 'border-blue-500 text-blue-600 dark:text-blue-400 font-medium'
-                          : 'border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200 hover:border-gray-300 dark:hover:border-gray-600'
+                          ? 'border-blue-500 text-blue-700 dark:text-blue-300 font-medium'
+                          : 'border-transparent text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200 hover:border-gray-300 dark:hover:border-gray-600'
                         }`}
                     >
                       {item.text}
@@ -195,8 +195,8 @@ export default function TableOfContents({ items }: TableOfContentsProps) {
                         href={`#${item.id}`}
                         onClick={(e) => handleMobileClick(e, item.id)}
                         className={`block py-2 border-l-2 pl-3 transition-colors ${activeId === item.id
-                            ? 'border-blue-500 text-blue-600 dark:text-blue-400 font-medium'
-                            : 'border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200 hover:border-gray-300 dark:hover:border-gray-600'
+                            ? 'border-blue-500 text-blue-700 dark:text-blue-300 font-medium'
+                            : 'border-transparent text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200 hover:border-gray-300 dark:hover:border-gray-600'
                           }`}
                       >
                         {item.text}

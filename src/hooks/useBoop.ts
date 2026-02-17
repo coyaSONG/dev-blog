@@ -1,5 +1,4 @@
-import { useState, useEffect, useCallback } from 'react'
-import { useSpring } from '@react-spring/web'
+import { useState, useEffect, useCallback, CSSProperties } from 'react'
 
 interface BoopConfig {
   x?: number
@@ -7,10 +6,6 @@ interface BoopConfig {
   rotation?: number
   scale?: number
   timing?: number
-  springConfig?: {
-    tension: number
-    friction: number
-  }
 }
 
 /**
@@ -24,16 +19,16 @@ export function useBoop({
   rotation = 0,
   scale = 1,
   timing = 150,
-  springConfig = { tension: 300, friction: 10 },
 }: BoopConfig = {}) {
   const [isBooped, setIsBooped] = useState(false)
 
-  const style = useSpring({
+  const style: CSSProperties = {
+    display: 'inline-block',
     transform: isBooped
       ? `translate(${x}px, ${y}px) rotate(${rotation}deg) scale(${scale})`
       : `translate(0px, 0px) rotate(0deg) scale(1)`,
-    config: springConfig,
-  })
+    transition: `transform 300ms var(--spring-bounce)`,
+  }
 
   useEffect(() => {
     if (!isBooped) return

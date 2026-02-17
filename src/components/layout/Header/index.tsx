@@ -2,7 +2,6 @@
 
 import { Menu, X, Search } from 'lucide-react'
 import { useState, useMemo, useCallback } from 'react'
-import { animated } from '@react-spring/web'
 import ThemeToggle from '@/components/common/ThemeToggle'
 import MobileMenu from './MobileMenu'
 import SearchModal from './SearchModal'
@@ -97,9 +96,9 @@ export default function Header() {
                   onMouseEnter={triggerSearchBoop}
                   className="p-2 flex items-center justify-center"
                 >
-                  <animated.span style={searchBoopStyle} className="inline-flex items-center justify-center">
+                  <span style={searchBoopStyle} className="inline-flex items-center justify-center">
                     <Search size={20} />
-                  </animated.span>
+                  </span>
                 </Button>
                 <ThemeToggle />
               </div>
@@ -113,9 +112,9 @@ export default function Header() {
                 aria-expanded={isMenuOpen}
                 onMouseEnter={triggerMenuBoop}
               >
-                <animated.span style={menuBoopStyle} className="inline-flex items-center justify-center">
+                <span style={menuBoopStyle} className="inline-flex items-center justify-center">
                   {isMenuOpen ? <X size={20} /> : <Menu size={20} />}
-                </animated.span>
+                </span>
               </Button>
             </div>
           </div>
@@ -127,4 +126,4 @@ export default function Header() {
       <SearchModal isOpen={isSearchOpen} onClose={handleSearchClose} />
     </>
   )
-} 
+}

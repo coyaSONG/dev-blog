@@ -1,19 +1,32 @@
 import { useState, useEffect } from 'react'
-import throttle from 'lodash/throttle'
 
 export function useScrollProgress() {
   const [progress, setProgress] = useState(0)
 
   useEffect(() => {
-    const handleScroll = throttle(() => {
+    let ticking = false
+    let lastProgress = 0
+
+    const update = () => {
       const totalScroll = document.documentElement.scrollHeight - window.innerHeight
       const currentProgress = (window.scrollY / totalScroll) * 100
-      setProgress(currentProgress)
-    }, 100)
+      if (currentProgress !== lastProgress) {
+        lastProgress = currentProgress
+        setProgress(currentProgress)
+      }
+      ticking = false
+    }
 
-    window.addEventListener('scroll', handleScroll)
+    const handleScroll = () => {
+      if (!ticking) {
+        requestAnimationFrame(update)
+        ticking = true
+      }
+    }
+
+    window.addEventListener('scroll', handleScroll, { passive: true })
     return () => window.removeEventListener('scroll', handleScroll)
   }, [])
 
   return progress
-} 
+}

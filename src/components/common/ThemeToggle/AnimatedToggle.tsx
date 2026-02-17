@@ -1,7 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
-import { animated, useSpring, to } from '@react-spring/web'
+import { useState, useEffect, CSSProperties } from 'react'
 
 interface AnimatedToggleProps {
   isDark: boolean
@@ -9,20 +8,6 @@ interface AnimatedToggleProps {
 
 export default function AnimatedToggle({ isDark }: AnimatedToggleProps) {
   const [isHovered, setIsHovered] = useState(false)
-
-  // Theme transition spring config (from Josh's dark mode example)
-  const themeSpringConfig = { mass: 4, tension: 250, friction: 35 }
-
-  // Combined theme and boop animation
-  const props = useSpring({
-    themeRotation: isDark ? 40 : 90,
-    boopRotation: isHovered ? 15 : 0,
-    centerR: isDark ? 9 : 5,
-    maskCx: isDark ? 12 : 30,
-    maskCy: isDark ? 4 : 0,
-    sunOpacity: isDark ? 0 : 1,
-    config: themeSpringConfig,
-  })
 
   // Boop reset effect
   useEffect(() => {
@@ -33,8 +18,26 @@ export default function AnimatedToggle({ isDark }: AnimatedToggleProps) {
     return () => window.clearTimeout(timeoutId)
   }, [isHovered])
 
+  const themeRotation = isDark ? 40 : 90
+  const boopRotation = isHovered ? 15 : 0
+  const centerR = isDark ? 9 : 5
+  const maskCx = isDark ? 12 : 30
+  const maskCy = isDark ? 4 : 0
+  const sunOpacity = isDark ? 0 : 1
+
+  const svgStyle: CSSProperties = {
+    display: 'inline-block',
+    verticalAlign: 'middle',
+    transformOrigin: 'center center',
+    transform: `rotate(${themeRotation + boopRotation}deg)`,
+    transition: 'transform 600ms var(--spring-gentle)',
+  }
+
+  const circleTransition = 'cx 600ms var(--spring-gentle), cy 600ms var(--spring-gentle), r 600ms var(--spring-gentle)'
+  const opacityTransition = 'opacity 300ms ease'
+
   return (
-    <animated.svg
+    <svg
       xmlns="http://www.w3.org/2000/svg"
       width="20"
       height="20"
@@ -45,38 +48,32 @@ export default function AnimatedToggle({ isDark }: AnimatedToggleProps) {
       strokeLinejoin="round"
       stroke="currentColor"
       onMouseEnter={() => setIsHovered(true)}
-      style={{
-        display: 'inline-block',
-        verticalAlign: 'middle',
-        transformOrigin: 'center center',
-        transform: to(
-          [props.themeRotation, props.boopRotation],
-          (theme, boop) => `rotate(${theme + boop}deg)`
-        ),
-      }}
+      style={svgStyle}
     >
       {/* Mask for creating the moon crescent */}
       <mask id="moon-mask">
         <rect x="0" y="0" width="100%" height="100%" fill="white" />
-        <animated.circle
+        <circle
           r="9"
           fill="black"
-          cx={props.maskCx}
-          cy={props.maskCy}
+          cx={maskCx}
+          cy={maskCy}
+          style={{ transition: circleTransition }}
         />
       </mask>
 
       {/* Center circle (sun or moon) */}
-      <animated.circle
+      <circle
         cx="12"
         cy="12"
         fill="currentColor"
         mask="url(#moon-mask)"
-        r={props.centerR}
+        r={centerR}
+        style={{ transition: circleTransition }}
       />
 
       {/* Sun rays */}
-      <animated.g stroke="currentColor" opacity={props.sunOpacity}>
+      <g stroke="currentColor" opacity={sunOpacity} style={{ transition: opacityTransition }}>
         <line x1="12" y1="1" x2="12" y2="3" />
         <line x1="12" y1="21" x2="12" y2="23" />
         <line x1="4.22" y1="4.22" x2="5.64" y2="5.64" />
@@ -85,7 +82,7 @@ export default function AnimatedToggle({ isDark }: AnimatedToggleProps) {
         <line x1="21" y1="12" x2="23" y2="12" />
         <line x1="4.22" y1="19.78" x2="5.64" y2="18.36" />
         <line x1="18.36" y1="5.64" x2="19.78" y2="4.22" />
-      </animated.g>
-    </animated.svg>
+      </g>
+    </svg>
   )
 }

@@ -27,7 +27,7 @@ export default function RelatedPosts({ posts }: RelatedPostsProps) {
           >
             <div className="flex flex-col h-full">
               {post.category && (
-                <span className="text-xs font-medium text-blue-600 dark:text-blue-400 mb-2">
+                <span className="text-xs font-medium text-blue-700 dark:text-blue-300 mb-2">
                   {post.category}
                 </span>
               )}

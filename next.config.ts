@@ -8,6 +8,7 @@ const config: NextConfig = {
   // Turbopack configuration (Next.js 16)
   turbopack: {},
   experimental: {
+    inlineCss: true,
     turbopackUseSystemTlsCerts: true,
     viewTransition: true
   },

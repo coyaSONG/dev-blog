@@ -11,7 +11,6 @@ const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || siteConfig.url;
 
 const bodyFont = Noto_Sans_KR({
   subsets: ["latin"],
-  weight: ["400", "500", "700"],
   display: "swap",
   variable: "--font-body",
 });
