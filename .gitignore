@@ -26,6 +26,7 @@
 .claude/
 tasks.md
 .playwright-mcp/
+.playwright-cli/
 claudedocs/
 
 # debug
