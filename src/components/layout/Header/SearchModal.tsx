@@ -275,7 +275,7 @@ export default function SearchModal({ isOpen, onClose }: SearchModalProps) {
                 <p className="text-gray-500 dark:text-gray-400">
                   검색어를 입력해주세요
                 </p>
-                <p className="text-sm text-gray-400 dark:text-gray-500 mt-1">
+                <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
                   제목, 설명, 태그로 검색할 수 있습니다
                 </p>
               </div>
@@ -291,7 +291,7 @@ export default function SearchModal({ isOpen, onClose }: SearchModalProps) {
                   <p className="text-gray-500 dark:text-gray-400">
                     &ldquo;{searchQuery}&rdquo;에 대한 검색 결과가 없습니다
                   </p>
-                  <p className="text-sm text-gray-400 dark:text-gray-500 mt-1">
+                  <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
                     다른 검색어를 입력해보세요
                   </p>
                 </div>
@@ -347,7 +347,7 @@ export default function SearchModal({ isOpen, onClose }: SearchModalProps) {
 
           {/* Keyboard Shortcuts Hint */}
           <div className="mt-4 pt-4 border-t border-gray-200 dark:border-gray-700">
-            <div className="flex items-center justify-center gap-4 text-xs text-gray-400 dark:text-gray-500">
+            <div className="flex items-center justify-center gap-4 text-xs text-gray-500 dark:text-gray-400">
               <span>
                 <kbd className="px-1.5 py-0.5 bg-gray-100 dark:bg-gray-700 rounded">
                   ESC

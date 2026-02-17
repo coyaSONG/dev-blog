@@ -10,9 +10,11 @@ interface PostCardProps {
     post: Post
     viewCount?: number
     index: number
+    headingLevel?: 'h2' | 'h3'
 }
 
-export function PostCard({ post, viewCount, index }: PostCardProps) {
+export function PostCard({ post, viewCount, index, headingLevel = 'h2' }: PostCardProps) {
+    const Heading = headingLevel
     const divRef = useRef<HTMLDivElement>(null)
     const [isFocused, setIsFocused] = useState(false)
     const [position, setPosition] = useState({ x: 0, y: 0 })
@@ -92,9 +94,9 @@ export function PostCard({ post, viewCount, index }: PostCardProps) {
                 </div>
 
                 {/* Title */}
-                <h2 className="text-2xl font-bold mb-3 text-gray-900 dark:text-gray-100 group-hover:text-brand-primary dark:group-hover:text-brand-primary-light transition-colors duration-200 line-clamp-2 font-heading">
+                <Heading className="text-2xl font-bold mb-3 text-gray-900 dark:text-gray-100 group-hover:text-brand-primary dark:group-hover:text-brand-primary-light transition-colors duration-200 line-clamp-2 font-heading">
                     {post.title}
-                </h2>
+                </Heading>
 
                 {/* Description */}
                 <p className="text-gray-600 dark:text-gray-400 mb-6 line-clamp-2 leading-relaxed flex-grow">
@@ -102,7 +104,7 @@ export function PostCard({ post, viewCount, index }: PostCardProps) {
                 </p>
 
                 {/* Footer Info */}
-                <div className="flex items-center justify-between pt-4 border-t border-gray-100 dark:border-gray-800 text-sm text-gray-500 dark:text-gray-500 mt-auto">
+                <div className="flex items-center justify-between pt-4 border-t border-gray-100 dark:border-gray-800 text-sm text-gray-600 dark:text-gray-400 mt-auto">
                     <div className="flex items-center gap-4">
                         <time dateTime={post.date}>
                             {new Date(post.date).toLocaleDateString('ko-KR', {

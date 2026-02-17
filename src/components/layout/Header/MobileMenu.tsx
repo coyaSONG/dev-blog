@@ -11,7 +11,7 @@ export default function MobileMenu({ isOpen }: MobileMenuProps) {
   if (!isOpen) return null
 
   return (
-    <div className="md:hidden">
+    <div className="md:hidden" role="navigation" aria-label="모바일 메뉴">
       <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
         {NAV_ITEMS.map((item) => (
           <Link

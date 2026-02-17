@@ -3,7 +3,6 @@ import { allPosts } from 'contentlayer2/generated'
 import { format, parseISO } from 'date-fns'
 import { ko } from 'date-fns/locale'
 import type { Post } from '@/types/post'
-import ReadingProgress from '@/components/common/ReadingProgress'
 import SocialShare from '@/components/common/SocialShare'
 import RelatedPosts from '@/components/RelatedPosts'
 import TableOfContents from '@/components/TableOfContents'
@@ -106,7 +105,6 @@ export default async function PostPage({ params }: Props) {
 
   return (
     <>
-      <ReadingProgress />
       <TableOfContents items={tocItems} />
 
       <script

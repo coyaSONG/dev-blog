@@ -57,8 +57,14 @@ export default function RootLayout({
       <html lang="ko" suppressHydrationWarning className={`${bodyFont.variable} ${headingFont.variable}`}>
         <body className="bg-white text-black dark:bg-gray-900 dark:text-white">
           <ThemeProvider>
+            <a
+              href="#main-content"
+              className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[100] focus:px-4 focus:py-2 focus:bg-brand-primary focus:text-white focus:rounded-lg focus:shadow-lg focus:outline-none"
+            >
+              본문으로 바로가기
+            </a>
             <Header />
-            <div className="container mx-auto px-4">
+            <div id="main-content" className="container mx-auto px-4">
               {children}
             </div>
           </ThemeProvider>

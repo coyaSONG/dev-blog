@@ -53,6 +53,11 @@ export default function Header() {
       <div className="fixed top-0 left-0 w-full h-1 z-50">
         <div
           className="h-full bg-gradient-to-r from-brand-primary to-brand-primary-light transition-all duration-150"
+          role="progressbar"
+          aria-label="페이지 읽기 진행률"
+          aria-valuenow={Math.round(scrollProgress)}
+          aria-valuemin={0}
+          aria-valuemax={100}
           style={{ width: `${scrollProgress}%` }}
         />
       </div>
@@ -105,6 +110,7 @@ export default function Header() {
                 variant="ghost"
                 className="md:hidden p-2 flex items-center justify-center"
                 aria-label="Toggle menu"
+                aria-expanded={isMenuOpen}
                 onMouseEnter={triggerMenuBoop}
               >
                 <animated.span style={menuBoopStyle} className="inline-flex items-center justify-center">

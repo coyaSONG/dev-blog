@@ -37,7 +37,7 @@ export default function RelatedPosts({ posts }: RelatedPostsProps) {
               <p className="text-sm text-gray-600 dark:text-gray-400 mb-3 line-clamp-2 flex-grow">
                 {post.description}
               </p>
-              <div className="flex items-center justify-between text-xs text-gray-500 dark:text-gray-500">
+              <div className="flex items-center justify-between text-xs text-gray-600 dark:text-gray-400">
                 <time dateTime={post.date}>
                   {format(parseISO(post.date), 'PPP', { locale: ko })}
                 </time>
