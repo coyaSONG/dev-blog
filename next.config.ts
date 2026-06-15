@@ -9,7 +9,6 @@ const config: NextConfig = {
   turbopack: {},
   experimental: {
     inlineCss: true,
-    turbopackUseSystemTlsCerts: true,
     viewTransition: true
   },
 
