@@ -1,5 +1,5 @@
 import { notFound } from 'next/navigation'
-import { allPosts } from 'contentlayer2/generated'
+import { allPosts } from '@/lib/posts'
 import { format, parseISO } from 'date-fns'
 import { ko } from 'date-fns/locale'
 import type { Post } from '@/types/post'
@@ -144,7 +144,7 @@ export default async function PostPage({ params }: Props) {
           description={post.description}
         />
         <div className="mt-8">
-          <MDXContent code={post.body.code} />
+          <MDXContent source={post.body.raw} />
         </div>
         <RelatedPosts posts={relatedPosts} />
         <Comments />

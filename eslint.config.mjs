@@ -4,7 +4,6 @@ import nextTypeScript from "eslint-config-next/typescript";
 const eslintConfig = [
   ...nextVitals,
   ...nextTypeScript,
-  { ignores: [".contentlayer/**"] },
 ];
 
 export default eslintConfig;
