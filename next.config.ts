@@ -1,11 +1,8 @@
-import { withContentlayer } from 'next-contentlayer2'
 import bundleAnalyzer from '@next/bundle-analyzer'
 import type { NextConfig } from 'next'
 
 const config: NextConfig = {
   reactStrictMode: true,
-  serverExternalPackages: ['contentlayer2', 'next-contentlayer2'],
-
   // Turbopack configuration (Next.js 16)
   turbopack: {},
   experimental: {
@@ -30,4 +27,4 @@ const withBundleAnalyzer = bundleAnalyzer({
   enabled: process.env.ANALYZE === 'true',
 })
 
-export default withBundleAnalyzer(withContentlayer(config))
+export default withBundleAnalyzer(config)

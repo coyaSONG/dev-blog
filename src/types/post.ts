@@ -16,7 +16,6 @@ export interface Post {
   url: string
   readingTime: number
   body: {
-    code: string
     raw: string
   }
   _id: string
@@ -32,4 +31,4 @@ export interface Post {
 export interface PostCardProps {
   post: Post
   isFeature?: boolean
-} 
+}

@@ -1,19 +1,36 @@
-'use client'
-
-import { getMDXComponent } from 'next-contentlayer2/hooks'
+import { MDXRemote } from 'next-mdx-remote/rsc'
+import rehypePrettyCode from 'rehype-pretty-code'
+import rehypeSlug from 'rehype-slug'
 import { CodeBlock } from './CodeBlock'
 
 interface MDXContentProps {
-  code: string
+  source: string
 }
 
 const components = {
   pre: CodeBlock,
 }
 
-export function MDXContent({ code }: MDXContentProps) {
-  // Contentlayer compiles the MDX source into this component; its identity follows `code`.
-  const Component = getMDXComponent(code)
-  // eslint-disable-next-line react-hooks/static-components
-  return <Component components={components} />
+export function MDXContent({ source }: MDXContentProps) {
+  return (
+    <MDXRemote
+      source={source}
+      components={components}
+      options={{
+        mdxOptions: {
+          rehypePlugins: [
+            rehypeSlug,
+            [
+              rehypePrettyCode,
+              {
+                theme: { dark: 'github-dark-dimmed', light: 'github-light' },
+                keepBackground: false,
+                defaultLang: 'plaintext',
+              },
+            ],
+          ],
+        },
+      }}
+    />
+  )
 }

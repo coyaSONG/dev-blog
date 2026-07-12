@@ -69,7 +69,6 @@ dev-blog/
 │   ├── hooks/             # Custom Hooks
 │   ├── types/             # TypeScript 타입
 │   └── utils/             # 유틸리티 함수
-├── contentlayer.config.ts # Contentlayer 설정
 └── next.config.ts         # Next.js 설정
 ```
 

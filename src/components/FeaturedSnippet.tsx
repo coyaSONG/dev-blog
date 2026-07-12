@@ -1,4 +1,4 @@
-import { allPosts } from 'contentlayer2/generated'
+import { allPosts } from '@/lib/posts'
 import Link from 'next/link'
 import { ArrowRight, Rss, Github } from 'lucide-react'
 import type { Post } from '@/types/post'

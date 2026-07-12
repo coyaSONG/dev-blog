@@ -1,4 +1,4 @@
-import { allPosts } from 'contentlayer2/generated'
+import { allPosts } from '@/lib/posts'
 import { siteConfig } from '@/config/site'
 import type { Post } from '@/types/post'
 import { sortPostsByDate } from '@/utils/posts'
