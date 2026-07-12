@@ -97,14 +97,11 @@ export default function TableOfContents({ items }: TableOfContentsProps) {
         <div className="py-4">
           <h2 className="text-lg font-bold text-gray-900 dark:text-white mb-4 pl-3">목차</h2>
           <ul className="space-y-2 text-sm">
-            {(() => {
-              let currentParentId = ''
-              return items.map((item) => {
-                if (item.level === 2) {
-                  currentParentId = item.id
-                }
-
-                const isVisible = item.level === 2 || (item.level === 3 && currentParentId === activeParentId)
+            {items.map((item, index) => {
+                const parentId = item.level === 2
+                  ? item.id
+                  : items.slice(0, index + 1).reverse().find(candidate => candidate.level === 2)?.id
+                const isVisible = item.level === 2 || (item.level === 3 && parentId === activeParentId)
 
                 if (!isVisible) return null
 
@@ -128,8 +125,7 @@ export default function TableOfContents({ items }: TableOfContentsProps) {
                     </a>
                   </li>
                 )
-              })
-            })()}
+              })}
           </ul>
         </div>
       </nav>

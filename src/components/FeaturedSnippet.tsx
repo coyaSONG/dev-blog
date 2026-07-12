@@ -1,5 +1,5 @@
 import { allPosts } from 'contentlayer2/generated'
-import { Link } from 'next-view-transitions'
+import Link from 'next/link'
 import { ArrowRight, Rss, Github } from 'lucide-react'
 import type { Post } from '@/types/post'
 import { getRecentPosts } from '@/utils/posts'

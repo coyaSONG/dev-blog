@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState, useCallback, useMemo } from 'react'
 import { X, Search, Loader2 } from 'lucide-react'
 import { Button } from '@/components/common/Button'
-import { Link } from 'next-view-transitions'
+import Link from 'next/link'
 import { useDebounce } from '@/hooks/useDebounce'
 import { searchIndexItems } from '@/utils/search'
 import type { SearchIndexItem, SearchIndexResponse } from '@/types/search'
@@ -305,7 +305,7 @@ export default function SearchModal({ isOpen, onClose }: SearchModalProps) {
                 </p>
                 <ul role="listbox" aria-label="검색 결과">
                   {searchResults.map((item, index) => (
-                    <li key={item.slug} role="option">
+                    <li key={item.slug} role="option" aria-selected="false">
                       <Link
                         ref={index === 0 ? firstResultRef : undefined}
                         href={`/posts/${item.slug}`}

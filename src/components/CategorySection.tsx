@@ -1,5 +1,5 @@
 import { allPosts } from 'contentlayer2/generated'
-import { Link } from 'next-view-transitions'
+import Link from 'next/link'
 import type { Post } from '@/types/post'
 import { getSortedCategories } from '@/utils/posts'
 
@@ -27,4 +27,4 @@ export default function CategorySection() {
       </div>
     </section>
   )
-} 
+}

@@ -1,5 +1,5 @@
 import { visit } from 'unist-util-visit'
-import type { Root, Element } from 'hast'
+import type { Root, Element, ElementContent } from 'hast'
 
 /**
  * Rehype plugin to add IDs to headings
@@ -24,7 +24,7 @@ export function rehypeHeadingIds() {
 function extractText(node: Element): string {
   if (node.children) {
     return node.children
-      .map((child: any) => {
+      .map((child: ElementContent) => {
         if (child.type === 'text') {
           return child.value
         }

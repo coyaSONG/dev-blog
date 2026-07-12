@@ -4,7 +4,6 @@ import "./globals.css";
 import Header from "@/components/layout/Header";
 import { ThemeProvider } from "@/components/common/ThemeProvider";
 import { Analytics } from "@vercel/analytics/react";
-import { ViewTransitions } from "next-view-transitions";
 import { siteConfig } from "@/config/site";
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || siteConfig.url;
@@ -52,8 +51,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <ViewTransitions>
-      <html lang="ko" suppressHydrationWarning className={`${bodyFont.variable} ${headingFont.variable}`}>
+    <html lang="ko" suppressHydrationWarning className={`${bodyFont.variable} ${headingFont.variable}`}>
         <body className="bg-white text-black dark:bg-gray-900 dark:text-white">
           <ThemeProvider>
             <a
@@ -69,7 +67,6 @@ export default function RootLayout({
           </ThemeProvider>
           <Analytics />
         </body>
-      </html>
-    </ViewTransitions>
+    </html>
   );
 }
