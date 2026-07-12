@@ -1,4 +1,4 @@
-import { Link as NextLink } from 'next-view-transitions'
+import NextLink from 'next/link'
 import { LinkProps } from './types'
 import { styles } from '@/utils/styles'
 
@@ -39,4 +39,4 @@ export const Link = ({
       {linkContent}
     </NextLink>
   )
-} 
+}

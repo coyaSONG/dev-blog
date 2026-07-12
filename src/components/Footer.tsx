@@ -1,4 +1,4 @@
-import { Link } from 'next-view-transitions'
+import Link from 'next/link'
 
 export default function Footer() {
   return (
@@ -56,4 +56,4 @@ export default function Footer() {
       </div>
     </footer>
   )
-} 
+}

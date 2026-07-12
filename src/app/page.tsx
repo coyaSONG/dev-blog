@@ -1,5 +1,5 @@
 import { allPosts } from 'contentlayer2/generated'
-import { Link } from 'next-view-transitions'
+import Link from 'next/link'
 import type { Post } from '@/types/post'
 import FeaturedSnippet from '@/components/FeaturedSnippet'
 import CategorySection from '@/components/CategorySection'
@@ -20,7 +20,7 @@ export default async function Home() {
         {/* 소개 섹션 */}
         <section className="mb-16 animate-fade-in">
           <div className="mb-3 font-mono text-sm text-brand-primary dark:text-brand-primary-light">
-            <span className="text-gray-400 dark:text-gray-500">// Developer.tsx</span>
+            <span className="text-gray-400 dark:text-gray-500">{'// Developer.tsx'}</span>
           </div>
           <h1 className="text-6xl font-bold mb-4 leading-tight font-heading">
             <span className="text-gray-400 dark:text-gray-500 font-mono text-2xl font-normal">const</span>
@@ -34,23 +34,23 @@ export default async function Home() {
             <div>
               <span className="text-accent-css">name</span>
               <span className="text-gray-400 dark:text-gray-500">:</span>
-              <span className="text-accent-web"> 'coyaSONG'</span>
+              <span className="text-accent-web"> &apos;coyaSONG&apos;</span>
               <span className="text-gray-400 dark:text-gray-500">,</span>
             </div>
             <div>
               <span className="text-accent-css">role</span>
               <span className="text-gray-400 dark:text-gray-500">:</span>
-              <span className="text-accent-web"> 'Frontend Developer'</span>
+              <span className="text-accent-web"> &apos;Frontend Developer&apos;</span>
               <span className="text-gray-400 dark:text-gray-500">,</span>
             </div>
             <div>
               <span className="text-accent-css">focus</span>
               <span className="text-gray-400 dark:text-gray-500">: [</span>
-              <span className="text-accent-web">'User Experience'</span>
+              <span className="text-accent-web">&apos;User Experience&apos;</span>
               <span className="text-gray-400 dark:text-gray-500">, </span>
-              <span className="text-accent-web">'Performance'</span>
+              <span className="text-accent-web">&apos;Performance&apos;</span>
               <span className="text-gray-400 dark:text-gray-500">, </span>
-              <span className="text-accent-web">'Aesthetics'</span>
+              <span className="text-accent-web">&apos;Aesthetics&apos;</span>
               <span className="text-gray-400 dark:text-gray-500">]</span>
             </div>
           </div>

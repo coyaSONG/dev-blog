@@ -1,7 +1,7 @@
 'use client'
 
 import { Share2, Twitter, Facebook, Linkedin, Link as LinkIcon } from 'lucide-react'
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 
 interface SocialShareProps {
   title: string
@@ -11,28 +11,12 @@ interface SocialShareProps {
 
 export default function SocialShare({ title, url, description }: SocialShareProps) {
   const [copied, setCopied] = useState(false)
-  const [currentUrl, setCurrentUrl] = useState(url || '')
 
-  useEffect(() => {
-    // Use client-side URL if not provided or if it's localhost
-    if (!url || url.includes('localhost')) {
-      setCurrentUrl(window.location.href)
-    }
-  }, [url])
-
-  const encodedUrl = encodeURIComponent(currentUrl)
-  const encodedTitle = encodeURIComponent(title)
-  const encodedDescription = encodeURIComponent(description || '')
-
-  const shareLinks = {
-    twitter: `https://twitter.com/intent/tweet?url=${encodedUrl}&text=${encodedTitle}`,
-    facebook: `https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}`,
-    linkedin: `https://www.linkedin.com/sharing/share-offsite/?url=${encodedUrl}`,
-  }
+  const getCurrentUrl = () => (!url || url.includes('localhost') ? window.location.href : url)
 
   const handleCopyLink = async () => {
     try {
-      await navigator.clipboard.writeText(currentUrl)
+      await navigator.clipboard.writeText(getCurrentUrl())
       setCopied(true)
       setTimeout(() => setCopied(false), 2000)
     } catch (err) {
@@ -41,6 +25,14 @@ export default function SocialShare({ title, url, description }: SocialShareProp
   }
 
   const handleShare = (platform: 'twitter' | 'facebook' | 'linkedin') => {
+    const encodedUrl = encodeURIComponent(getCurrentUrl())
+    const encodedTitle = encodeURIComponent(title)
+    const encodedDescription = encodeURIComponent(description || '')
+    const shareLinks = {
+      twitter: `https://twitter.com/intent/tweet?url=${encodedUrl}&text=${encodedTitle}&description=${encodedDescription}`,
+      facebook: `https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}`,
+      linkedin: `https://www.linkedin.com/sharing/share-offsite/?url=${encodedUrl}`,
+    }
     window.open(
       shareLinks[platform],
       'share-dialog',

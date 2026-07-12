@@ -1,7 +1,7 @@
 'use client'
 
 import { useRef, useState } from 'react'
-import { Link } from 'next-view-transitions'
+import Link from 'next/link'
 import type { Post } from '@/types/post'
 import { ViewCount } from '@/components/ViewCount'
 import { getTagClasses, getCardAccentColor } from '@/utils/styles'

@@ -1,5 +1,5 @@
 import { allPosts } from 'contentlayer2/generated'
-import { Link } from 'next-view-transitions'
+import Link from 'next/link'
 import type { Post } from '@/types/post'
 import { PostCard } from '@/components/PostCard'
 import { sortPostsByDate, filterPostsByCategory, getSortedCategories } from '@/utils/posts'
@@ -82,4 +82,4 @@ export default async function PostsPage({ searchParams }: PostsPageProps) {
       )}
     </div>
   )
-} 
+}

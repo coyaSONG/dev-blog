@@ -1,4 +1,5 @@
 import { withContentlayer } from 'next-contentlayer2'
+import bundleAnalyzer from '@next/bundle-analyzer'
 import type { NextConfig } from 'next'
 
 const config: NextConfig = {
@@ -25,7 +26,7 @@ const config: NextConfig = {
 }
 
 // Bundle Analyzer (only in analyze mode)
-const withBundleAnalyzer = require('@next/bundle-analyzer')({
+const withBundleAnalyzer = bundleAnalyzer({
   enabled: process.env.ANALYZE === 'true',
 })
 

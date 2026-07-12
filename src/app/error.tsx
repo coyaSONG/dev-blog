@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect } from 'react';
+import Link from 'next/link';
 
 export default function Error({
   error,
@@ -44,12 +45,12 @@ export default function Error({
           >
             다시 시도
           </button>
-          <a
+          <Link
             href="/"
             className="px-6 py-3 border-2 border-black dark:border-white rounded-lg font-medium hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black transition-colors"
           >
             홈으로 돌아가기
-          </a>
+          </Link>
         </div>
       </div>
     </div>

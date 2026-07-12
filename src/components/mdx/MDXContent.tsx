@@ -1,6 +1,6 @@
 'use client'
 
-import { useMDXComponent } from 'next-contentlayer2/hooks'
+import { getMDXComponent } from 'next-contentlayer2/hooks'
 import { CodeBlock } from './CodeBlock'
 
 interface MDXContentProps {
@@ -12,6 +12,8 @@ const components = {
 }
 
 export function MDXContent({ code }: MDXContentProps) {
-  const Component = useMDXComponent(code)
+  // Contentlayer compiles the MDX source into this component; its identity follows `code`.
+  const Component = getMDXComponent(code)
+  // eslint-disable-next-line react-hooks/static-components
   return <Component components={components} />
 }
