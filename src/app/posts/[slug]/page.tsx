@@ -12,6 +12,7 @@ import { getRelatedPosts } from '@/utils/posts'
 import { extractHeadings } from '@/utils/toc'
 import { getViewCount } from '@/lib/views'
 import { getTagClasses } from '@/utils/styles'
+import { serializeJsonForHtml } from '@/utils/serialization'
 
 import { MDXContent } from '@/components/mdx/MDXContent'
 import { siteConfig } from '@/config/site'
@@ -109,7 +110,7 @@ export default async function PostPage({ params }: Props) {
 
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        dangerouslySetInnerHTML={{ __html: serializeJsonForHtml(jsonLd) }}
       />
       <article className="prose dark:prose-invert mx-auto py-8">
         <div className="mb-12 animate-fade-in">

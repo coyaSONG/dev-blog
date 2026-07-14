@@ -2,6 +2,7 @@ import { allPosts } from '@/lib/posts'
 import { siteConfig } from '@/config/site'
 import type { Post } from '@/types/post'
 import { sortPostsByDate } from '@/utils/posts'
+import { escapeXml, toCdata } from '@/utils/serialization'
 
 export async function GET() {
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || siteConfig.url
@@ -11,15 +12,15 @@ export async function GET() {
     .map((post) => {
       const postUrl = `${siteUrl}${post.url}`
       const postDate = new Date(post.date).toUTCString()
-      const categories = post.tags?.map((tag) => `<category>${tag}</category>`).join('\n      ') || ''
+      const categories = post.tags?.map((tag) => `<category>${escapeXml(tag)}</category>`).join('\n      ') || ''
 
       return `
     <item>
-      <title><![CDATA[${post.title}]]></title>
-      <link>${postUrl}</link>
-      <guid isPermaLink="true">${postUrl}</guid>
-      <description><![CDATA[${post.description}]]></description>
-      <content:encoded><![CDATA[${post.body.raw}]]></content:encoded>
+      <title>${toCdata(post.title)}</title>
+      <link>${escapeXml(postUrl)}</link>
+      <guid isPermaLink="true">${escapeXml(postUrl)}</guid>
+      <description>${toCdata(post.description)}</description>
+      <content:encoded>${toCdata(post.body.raw)}</content:encoded>
       <pubDate>${postDate}</pubDate>
       ${categories}
     </item>`
@@ -29,13 +30,13 @@ export async function GET() {
   const rssFeed = `<?xml version="1.0" encoding="UTF-8"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
   <channel>
-    <title>${siteConfig.name}</title>
-    <link>${siteUrl}</link>
-    <description>${siteConfig.description}</description>
+    <title>${escapeXml(siteConfig.name)}</title>
+    <link>${escapeXml(siteUrl)}</link>
+    <description>${escapeXml(siteConfig.description)}</description>
     <language>ko</language>
     <generator>Next.js RSS</generator>
     <lastBuildDate>${new Date().toUTCString()}</lastBuildDate>
-    <atom:link href="${siteUrl}/feed.xml" rel="self" type="application/rss+xml" />${rssItems}
+    <atom:link href="${escapeXml(siteUrl)}/feed.xml" rel="self" type="application/rss+xml" />${rssItems}
   </channel>
 </rss>`
 
