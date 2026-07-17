@@ -15,11 +15,11 @@ export default function AboutPage() {
           about.tsx
         </p>
         <h1 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-brand-primary to-brand-primary-light bg-clip-text text-transparent">
-          coyaSONG · Frontend Developer
+          coyaSONG · AI Tooling &amp; Open Source Engineer
         </h1>
         <p className="mt-4 text-lg text-gray-600 dark:text-gray-400 leading-relaxed max-w-3xl">
-          픽셀과 코드 사이에서 UX, 성능, 미감을 균형 있게 만드는 프론트엔드 개발자입니다.
-          Next.js 16, React 19, TypeScript를 중심으로 RSC, View Transitions, Turbopack 같은 최신 스택을 실무에 적용합니다.
+          신뢰할 수 있는 AI 에이전트와 개발자 도구를 만들고, TypeScript·Go·Rust·Python·Swift 생태계의
+          오픈소스에 테스트와 검증 근거를 갖춘 개선을 기여합니다.
         </p>
       </header>
 
@@ -27,18 +27,18 @@ export default function AboutPage() {
         <div className="p-6 rounded-2xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900/60 shadow-sm">
           <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-3">지향점</h2>
           <ul className="space-y-2 text-gray-700 dark:text-gray-300 leading-relaxed">
-            <li>· 사용자가 체감하는 속도와 깔끔한 인터랙션에 집착합니다.</li>
-            <li>· 유지보수 쉬운 설계(명확한 경계, 타입 안전성, 테스트)로 팀 속도를 끌어올립니다.</li>
-            <li>· 문서화·자동화·관찰 가능성을 통해 “예측 가능한 제품”을 만듭니다.</li>
+            <li>· 재현 가능한 문제 정의와 회귀 테스트를 변경의 출발점으로 삼습니다.</li>
+            <li>· 명확한 경계, 타입 안전성, 지속 상태로 실패해도 복구 가능한 도구를 만듭니다.</li>
+            <li>· 자동화의 결과와 한계를 공개해 사람이 검증하고 개입할 수 있게 합니다.</li>
           </ul>
         </div>
         <div className="p-6 rounded-2xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900/60 shadow-sm">
           <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-3">최근 집중하는 것</h2>
           <ul className="space-y-2 text-gray-700 dark:text-gray-300 leading-relaxed">
-            <li>· React Server Components & Partial Prerendering 실전 패턴</li>
-            <li>· View Transitions / 모션을 통한 UX 품질 제어</li>
-            <li>· Vercel Analytics + KV/Redis로 데이터 기반 개선</li>
-            <li>· MDX 기반 콘텐츠 워크플로우 정교화</li>
+            <li>· MCP 기반 리서치 도구와 인용 가능한 에이전트 출력</li>
+            <li>· 로컬 우선 연구 루프와 검증된 개선만 남기는 ratchet</li>
+            <li>· tmux·파일 시스템 기반 멀티 에이전트 협업</li>
+            <li>· 대규모 오픈소스의 테스트·릴리스·문서 워크플로우</li>
           </ul>
         </div>
       </section>
@@ -47,35 +47,35 @@ export default function AboutPage() {
         <h2 className="text-3xl font-bold text-gray-900 dark:text-white">기술 스택</h2>
         <div className="grid gap-4 md:grid-cols-2">
           <div className="p-6 rounded-2xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900/60 shadow-sm">
-            <p className="text-sm font-semibold text-brand-primary dark:text-brand-primary-light uppercase tracking-wide mb-3">Frontend</p>
+            <p className="text-sm font-semibold text-brand-primary dark:text-brand-primary-light uppercase tracking-wide mb-3">Agent &amp; Tooling</p>
             <ul className="space-y-2 text-gray-700 dark:text-gray-300">
-              <li>Next.js 16 / React 19 (App Router, RSC, View Transitions)</li>
-              <li>TypeScript 5, Contentlayer 2, MDX</li>
-              <li>Tailwind CSS 3, Shiki + rehype-pretty-code</li>
+              <li>Model Context Protocol, CLI, stdio·HTTP transport</li>
+              <li>TypeScript / Node.js, Go, Rust, Python, Swift</li>
+              <li>상태 지속성, 복구 모델, 구조화된 관찰 가능성</li>
             </ul>
           </div>
           <div className="p-6 rounded-2xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900/60 shadow-sm">
             <p className="text-sm font-semibold text-brand-primary dark:text-brand-primary-light uppercase tracking-wide mb-3">Tooling & Ops</p>
             <ul className="space-y-2 text-gray-700 dark:text-gray-300">
-              <li>Turbopack, Vitest, Playwright (E2E), eslint/tailwind linting</li>
-              <li>Vercel Analytics, Upstash KV (조회수, 세션), GitHub Actions</li>
-              <li>DX: pnpm, Type-safe utils, 자동화된 스크립트 작성</li>
+              <li>Vitest, node:test, Go race detector, Playwright</li>
+              <li>GitHub Actions, npm, MCP Registry, Docker</li>
+              <li>재현 → 최소 수정 → 회귀 테스트 → 전체 검증</li>
             </ul>
           </div>
           <div className="p-6 rounded-2xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900/60 shadow-sm">
             <p className="text-sm font-semibold text-brand-primary dark:text-brand-primary-light uppercase tracking-wide mb-3">콘텐츠 & 커뮤니티</p>
             <ul className="space-y-2 text-gray-700 dark:text-gray-300">
-              <li>MDX로 인터랙티브 문서 작성</li>
-              <li>Giscus로 독자 피드백 루프 운영</li>
-              <li>RSS 피드와 검색으로 아카이빙 개선</li>
+              <li>스펙과 공식 문서를 근거로 한 기술 문서 수정</li>
+              <li>검증 명령과 환경 한계를 포함한 PR 설명</li>
+              <li>AI 보조 사용을 공개하는 투명한 기여 방식</li>
             </ul>
           </div>
           <div className="p-6 rounded-2xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900/60 shadow-sm">
             <p className="text-sm font-semibold text-brand-primary dark:text-brand-primary-light uppercase tracking-wide mb-3">관심사</p>
             <ul className="space-y-2 text-gray-700 dark:text-gray-300">
-              <li>UX & 마이크로인터랙션, 모션 디자인</li>
-              <li>웹 성능 최적화 (Core Web Vitals, INP)</li>
-              <li>개발자 경험 개선: 테스트 속도, 코드 모듈성</li>
+              <li>신뢰할 수 있는 에이전트 런타임과 평가</li>
+              <li>개발자 경험, 테스트 속도, 릴리스 자동화</li>
+              <li>접근성·웹 표준·타입 안전성</li>
             </ul>
           </div>
         </div>

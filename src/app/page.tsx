@@ -40,17 +40,17 @@ export default async function Home() {
             <div>
               <span className="text-accent-css">role</span>
               <span className="text-gray-400 dark:text-gray-500">:</span>
-              <span className="text-accent-web"> &apos;Frontend Developer&apos;</span>
+              <span className="text-accent-web"> &apos;AI Tooling &amp; Open Source Engineer&apos;</span>
               <span className="text-gray-400 dark:text-gray-500">,</span>
             </div>
             <div>
               <span className="text-accent-css">focus</span>
               <span className="text-gray-400 dark:text-gray-500">: [</span>
-              <span className="text-accent-web">&apos;User Experience&apos;</span>
+              <span className="text-accent-web">&apos;AI Agents&apos;</span>
               <span className="text-gray-400 dark:text-gray-500">, </span>
-              <span className="text-accent-web">&apos;Performance&apos;</span>
+              <span className="text-accent-web">&apos;Developer Tooling&apos;</span>
               <span className="text-gray-400 dark:text-gray-500">, </span>
-              <span className="text-accent-web">&apos;Aesthetics&apos;</span>
+              <span className="text-accent-web">&apos;Open Source&apos;</span>
               <span className="text-gray-400 dark:text-gray-500">]</span>
             </div>
           </div>
@@ -58,13 +58,19 @@ export default async function Home() {
             {`}`}
           </div>
           <p className="text-xl text-gray-600 dark:text-gray-400 mb-8 leading-relaxed max-w-2xl">
-            픽셀과 코드 사이에서 의미 있는 경험을 설계합니다. <br />
-            사용자를 위한 인터페이스, 그리고 더 나은 웹에 대한 이야기를 나눕니다.
+            검증 가능한 AI 에이전트와 개발자 도구를 만들고, <br />
+            여러 오픈소스 생태계에 재현 가능한 수정과 테스트를 기여합니다.
           </p>
-          <div className="flex gap-4">
+          <div className="flex flex-wrap gap-4">
+            <Link
+              href="/portfolio"
+              className="bg-brand-primary hover:bg-brand-primary-dark text-white px-6 py-3 rounded-lg transition-all hover:shadow-lg hover:scale-105 font-medium"
+            >
+              포트폴리오 보기
+            </Link>
             <Link
               href="/posts"
-              className="bg-brand-primary hover:bg-brand-primary-dark text-white px-6 py-3 rounded-lg transition-all hover:shadow-lg hover:scale-105 font-medium"
+              className="bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 px-6 py-3 rounded-lg transition-all hover:shadow-md font-medium"
             >
               블로그 글 보기
             </Link>
@@ -72,7 +78,7 @@ export default async function Home() {
               href="https://github.com/coyaSONG"
               target="_blank"
               rel="noopener noreferrer"
-              className="bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 px-6 py-3 rounded-lg transition-all hover:shadow-md font-medium"
+              className="border border-gray-300 dark:border-gray-700 hover:border-brand-primary px-6 py-3 rounded-lg transition-all hover:shadow-md font-medium"
             >
               GitHub 방문하기
             </a>

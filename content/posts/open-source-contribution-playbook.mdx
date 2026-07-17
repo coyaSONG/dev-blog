@@ -1,0 +1,88 @@
+---
+title: "오픈소스 기여를 포트폴리오로 만드는 법: 병합 PR 4가지 사례"
+date: "2026-07-18"
+description: "Effect, Quicktype, Kopia, MDN에 기여하며 사용한 문제 재현, 최소 변경, 회귀 테스트, 검증 기록 방식을 실제 병합 PR로 정리합니다."
+category: "Open Source"
+tags:
+  - Open Source
+  - Testing
+  - GitHub
+  - AI
+---
+
+오픈소스 기여의 가치는 PR 개수만으로 설명하기 어렵습니다. 어떤 문제를 골랐고, 왜 그 변경이 맞으며, 기존 동작을 깨지 않았다는 것을 어떻게 증명했는지가 더 중요합니다.
+
+저는 기여 과정을 다음 네 단계로 고정합니다.
+
+1. 저장소의 기여 규칙과 CI를 먼저 읽는다.
+2. 문제를 재현하고 실패 원인을 한 문장으로 설명한다.
+3. 수정 범위를 최소화하고 회귀 테스트를 추가한다.
+4. 저장소가 신뢰하는 검증 명령과 실행하지 못한 항목을 함께 기록한다.
+
+아래 사례는 모두 upstream에 병합된 실제 PR입니다. 구현과 검증에는 OpenAI Codex의 도움을 사용했고, 각 PR에서 그 사실과 검증 범위를 공개했습니다.
+
+## Effect: property test가 실행되기 전에 실패한 이유 찾기
+
+[Effect PR #6416](https://github.com/Effect-TS/effect/pull/6416)은 `@effect/vitest`의 record 형태 property input에 `Schema`를 넣을 때 test collection이 실패하는 문제를 고쳤습니다.
+
+핵심 원인은 단순했습니다. `Schema.toArbitrary`로 변환한 값을 만든 직후 원래 `Schema`로 다시 덮어써 FastCheck가 `Arbitrary` 대신 `Schema`를 받았습니다. 수정은 변환 결과를 보존하는 한 줄이었지만, 중요한 부분은 `{ value: Schema.Int }` 형태의 회귀 테스트였습니다.
+
+검증은 변경 패키지에서 점진적으로 넓혔습니다.
+
+- 대상 테스트 파일: 25개 통과, expected failure 1개, skip 4개
+- `packages/vitest/test` 전체: 34개 통과, expected failure 1개, skip 4개
+- 저장소 `check`, `lint`, `git diff --check` 통과
+- 컨테이너 런타임이 없어 완료하지 못한 저장소 전체 통합 테스트는 별도 환경 한계로 기록
+
+여기서 배운 점은 “작은 diff”와 “충분한 증거”는 서로 반대가 아니라는 것입니다. 변경은 한 줄이어도 재현과 회귀 테스트, 패키지 전체 검증이 있으면 리뷰어가 안전성을 빠르게 판단할 수 있습니다.
+
+## Quicktype: 새 기능과 기본 호환성을 동시에 증명하기
+
+[Quicktype PR #2947](https://github.com/glideapps/quicktype/pull/2947)은 Swift 코드 생성기에 `--final-classes` 옵션을 추가했습니다. 모델 class뿐 아니라 재귀 구조 때문에 class로 승격된 타입과 `JSONAny` 같은 helper까지 일관되게 `final class`로 생성합니다.
+
+호환성 전략은 opt-in이었습니다. 기본값을 `false`로 두어 기존 출력을 바꾸지 않고, 옵션을 켠 경우에만 새 출력을 생성했습니다. 테스트도 이 경계를 중심으로 구성했습니다.
+
+- 새 옵션의 활성화, helper 적용, 기본값 비활성화를 다루는 집중 테스트 3개
+- 단위 테스트 130개 통과
+- Swift 6.2.3에서 fixture 241개 전체 통과
+- build, Biome, diff check 통과
+- 저장소 지정 Node 버전과 실제 검증 환경의 차이도 PR에 명시
+
+새 옵션을 추가할 때는 “새 동작이 된다”만큼 “기본 동작이 그대로다”를 테스트하는 것이 중요했습니다.
+
+## Kopia: 동작을 바꾸지 않는 관찰 가능성 개선
+
+[Kopia PR #5495](https://github.com/kopia/kopia/pull/5495)와 [#5501](https://github.com/kopia/kopia/pull/5501)은 cachefs와 list cache의 `Debugf` 로그를 `Debugw` 구조화 로그로 바꿨습니다.
+
+문자열 안에 묻혀 있던 entry ID, expiration, prefix, error를 안정적인 field로 분리하면 로그 검색과 집계가 쉬워집니다. 반면 cache 동작이나 debug gate는 건드리지 않았습니다. 각 PR의 코드 변경은 한 파일에서 3줄을 교체하는 수준으로 제한했습니다.
+
+- 대상 package의 `go test`, `go vet` 통과
+- 저장소 lint 통과
+- CI test 6,449개 통과, 109개 skip
+- diff check 통과
+
+리팩터링 PR에서는 기능 변화가 없다는 주장을 전체 검증으로 뒷받침해야 합니다. 작은 구조화 로그 변경도 저장소 전체 테스트를 통과했다는 사실이 리뷰 비용을 낮췄습니다.
+
+## MDN: 기억이 아니라 표준 문서를 근거로 수정하기
+
+MDN에는 서로 다른 종류의 문서 오류 세 가지를 수정했습니다.
+
+- [PR #44712](https://github.com/mdn/content/pull/44712): `slider`와 `spinbutton`이 모두 read-write range라는 점을 WAI-ARIA와 APG에 맞게 명확화
+- [PR #44714](https://github.com/mdn/content/pull/44714): MP4에서 Opus codec string이 잘못된 `mp4a.ad`가 아니라 case-sensitive `Opus` sample entry를 사용한다는 점을 RFC 6381과 MP4RA에 근거해 수정
+- [PR #44716](https://github.com/mdn/content/pull/44716): `colspan`이 1000을 초과하면 1로 초기화되는 것이 아니라 1000으로 clip된다는 설명을 HTML Standard에 맞게 수정
+
+문서 기여는 코드 테스트가 적은 대신 근거의 품질이 곧 테스트 역할을 합니다. 각 변경에 primary specification을 연결하고, Markdown lint, Prettier, CSpell, front matter, cross-reference 검사를 실행했습니다. 첫 번째 PR에서는 리뷰어의 문단 구조 피드백을 반영해 설명 자체도 더 간결하게 다듬었습니다.
+
+## 좋은 기여 기록이 포트폴리오가 되는 조건
+
+기여 목록을 단순히 나열하면 방문자는 무엇을 잘하는지 알기 어렵습니다. 각 사례를 다음 구조로 설명하면 역량이 보입니다.
+
+| 질문 | 기록할 내용 |
+| --- | --- |
+| 무엇이 잘못됐나? | 사용자 또는 개발자가 겪는 구체적인 실패 |
+| 왜 발생했나? | 코드, 스펙, 데이터 흐름에서 찾은 원인 |
+| 무엇을 바꿨나? | 호환성을 포함한 최소 변경 범위 |
+| 어떻게 증명했나? | 회귀 테스트와 저장소 고유 검증 명령 |
+| 무엇을 못 했나? | 자격 증명, 하드웨어, 서비스 등 정확한 환경 한계 |
+
+제 [포트폴리오](/portfolio)는 이 구조로 직접 만든 도구와 upstream 기여를 연결합니다. 최신 병합 내역은 [GitHub 프로필](https://github.com/coyaSONG)에서 자동으로 갱신됩니다.
