@@ -19,6 +19,10 @@ export const NAV_ITEMS: NavItem[] = [
     path: '/posts',
   },
   {
+    label: 'AI Timeline',
+    path: '/ai-news',
+  },
+  {
     label: 'Portfolio',
     path: '/portfolio',
   },
