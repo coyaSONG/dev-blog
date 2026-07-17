@@ -19,8 +19,12 @@ export const NAV_ITEMS: NavItem[] = [
     path: '/posts',
   },
   {
+    label: 'Portfolio',
+    path: '/portfolio',
+  },
+  {
     label: 'GitHub',
     path: 'https://github.com/coyaSONG',
     external: true,
   },
-] as const 
+] as const
