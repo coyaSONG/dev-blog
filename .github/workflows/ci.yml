@@ -20,6 +20,6 @@ jobs:
           node-version: "22"
       - run: corepack enable
       - run: pnpm install --frozen-lockfile
+      - run: pnpm content:validate-ai-news
       - run: pnpm test --run
       - run: pnpm build
-

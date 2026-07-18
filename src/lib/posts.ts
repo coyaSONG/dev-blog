@@ -3,7 +3,7 @@ import 'server-only'
 import fs from 'node:fs'
 import path from 'node:path'
 import matter from 'gray-matter'
-import type { Author, Post } from '@/types/post'
+import type { Author, Post, PostFormat } from '@/types/post'
 
 const POSTS_DIRECTORY = path.join(process.cwd(), 'content', 'posts')
 
@@ -39,6 +39,15 @@ function optionalAuthor(value: unknown): Author | undefined {
   }
 }
 
+function optionalDate(value: unknown, filePath: string): string | undefined {
+  if (value === undefined || value === null) return undefined
+  return normalizeDate(value, filePath)
+}
+
+function optionalFormat(value: unknown): PostFormat | undefined {
+  return value === 'brief' || value === 'deep-dive' ? value : undefined
+}
+
 function loadPost(filePath: string): Post {
   const source = fs.readFileSync(filePath, 'utf8')
   const { data, content } = matter(source)
@@ -49,11 +58,13 @@ function loadPost(filePath: string): Post {
   return {
     title: requiredString(data.title, 'title', relativePath),
     date: normalizeDate(data.date, relativePath),
+    updated: optionalDate(data.updated, relativePath),
     description: requiredString(data.description, 'description', relativePath),
     category: typeof data.category === 'string' ? data.category : 'General',
     tags: Array.isArray(data.tags) ? data.tags.filter((tag): tag is string => typeof tag === 'string') : [],
     viewCount: typeof data.viewCount === 'number' ? data.viewCount : 0,
     author: optionalAuthor(data.author),
+    format: optionalFormat(data.format),
     slug: flattenedPath,
     url: `/posts/${flattenedPath}`,
     readingTime: Math.max(1, Math.ceil(words / 200)),
