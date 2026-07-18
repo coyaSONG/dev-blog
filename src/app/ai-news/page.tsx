@@ -77,10 +77,10 @@ export default function AiNewsPage() {
           <span className="text-sm text-gray-500 dark:text-gray-400">{deepDives.length}편</span>
         </div>
         <div className="grid gap-4 md:grid-cols-2">
-          {deepDives.slice(0, 6).map((post) => (
+          {deepDives.slice(0, 6).map((post, index) => (
             <Link
-              key={post._id}
-              href={post.url}
+              key={index}
+              href={`/posts/${encodeURIComponent(post.slug)}`}
               className="group rounded-2xl border border-brand-primary/25 bg-brand-primary/5 p-5 transition hover:-translate-y-0.5 hover:border-brand-primary hover:shadow-md dark:bg-brand-primary/10"
             >
               <span className="text-xs font-bold uppercase tracking-wider text-brand-primary dark:text-brand-primary-light">
