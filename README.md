@@ -87,6 +87,9 @@ tags: ["React", "Next.js"]
 여기에 콘텐츠를 작성하세요...
 ```
 
+AI 발표 글의 브리핑·심층 분석 구분, 근거 표시, 재현 절차는
+[AI 기술 글 편집 가이드](docs/AI_EDITORIAL_GUIDE.md)를 따릅니다.
+
 ## 🔧 환경 요구사항
 
 - **Node.js**: 22.x

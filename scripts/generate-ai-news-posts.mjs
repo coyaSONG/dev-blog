@@ -1,6 +1,7 @@
 import { mkdir, readdir, rm, writeFile } from 'node:fs/promises'
 import { join } from 'node:path'
 import { aiNewsTopics } from './ai-news-topics.mjs'
+import { aiNewsDeepDives } from './ai-news-deep-dives.mjs'
 
 const root = new URL('..', import.meta.url).pathname
 const outputDir = join(root, 'content', 'posts')
@@ -8,15 +9,19 @@ const legacyOutputDir = join(outputDir, 'ai-news')
 
 const yamlString = (value) => JSON.stringify(value)
 
-const renderPost = (topic) => `---
+const author = `author:\n  name: "coyaSONG"`
+
+const renderBrief = (topic) => `---
 title: ${yamlString(topic.title)}
 date: ${yamlString(topic.date)}
 description: ${yamlString(topic.summary)}
 category: "AI"
 tags: ${JSON.stringify(topic.tags)}
+format: "brief"
+${author}
 ---
 
-> **핵심 요약**: ${topic.summary}
+> **한 문장 요약**: ${topic.summary}
 
 ## 무엇이 발표됐나
 
@@ -26,29 +31,107 @@ ${topic.organization}의 공식 발표일은 ${topic.date}다. 이날 공개된 
 
 ${topic.technical}
 
-이 발표를 제품에 적용할 때는 데모나 단일 벤치마크보다 실제 입력 분포에서의 품질, 지연 시간, 비용을 함께 측정해야 한다. 모델 자체의 성능뿐 아니라 API 안정성, 도구 호출 방식, 관측 가능성, 데이터 처리 경계까지 포함해 시스템 수준으로 검증하는 것이 중요하다.
-
-## 당시 중요했던 이유
+## 왜 중요했고, 무엇을 경계해야 하나
 
 ${topic.impact}
 
-## 개발자가 확인할 것
-
-- 공식 문서가 밝힌 지원 범위와 실제 사용 가능한 지역·플랜·API를 구분한다.
-- 기존 기준 모델과 동일한 데이터셋, 프롬프트, 예산으로 재평가한다.
-- 실패 사례를 먼저 수집하고 정확도·지연 시간·비용·안전성 지표를 함께 기록한다.
-- 프리뷰 기능이라면 버전 고정, 폴백, 사용량 제한, 감사 로그를 준비한다.
-
-## 발표를 읽을 때의 주의점
-
 ${topic.caveat}
 
-공식 발표 수치는 발표자가 선택한 조건에서 측정된 결과다. 따라서 다른 모델과의 우열이나 프로덕션 적합성을 단정하기보다, 아래 1차 출처를 기준으로 요구사항에 맞는 재현 평가를 설계하는 편이 안전하다.
+이 글은 발표 당시의 핵심을 빠르게 확인하기 위한 브리핑이다. 수치와 제공 범위는 아래 1차 출처를 기준으로 정리했으며, 별도의 직접 벤치마크를 수행했다는 의미는 아니다.
 
 ## 공식 1차 출처
 
 - [${topic.sourceLabel}](${topic.sourceUrl}) — ${topic.organization}, ${topic.date}${topic.extraSource ? `\n- [${topic.extraSource.label}](${topic.extraSource.url})` : ''}
 `
+
+const renderList = (items) => items.map((item) => `- ${item}`).join('\n')
+
+const renderDeepDive = (topic, deepDive) => {
+  const related = deepDive.relatedSlugs
+    .map((slug) => aiNewsTopics.find((candidate) => candidate.slug === slug))
+    .filter(Boolean)
+    .map((candidate) => `- [${candidate.title}](/posts/${candidate.slug})`)
+    .join('\n')
+
+  return `---
+title: ${yamlString(topic.title)}
+date: ${yamlString(topic.date)}
+updated: "2026-07-18"
+description: ${yamlString(topic.summary)}
+category: "AI"
+tags: ${JSON.stringify([...topic.tags, 'Deep Dive'])}
+format: "deep-dive"
+${author}
+---
+
+> **핵심 판단**: ${deepDive.thesis}
+
+${deepDive.lead}
+
+## 발표를 한눈에 보기
+
+- **발표 주체**: ${topic.organization}
+- **공식 발표일**: ${topic.date}
+- **대상**: ${topic.subject}
+- **발표 당시 상태**: ${deepDive.releaseState}
+- **이 글의 질문**: ${deepDive.question}
+
+${topic.announcement}
+
+## 기술 구조: 무엇이 실제로 달라졌나
+
+${topic.technical}
+
+${deepDive.mechanism}
+
+> **작동 흐름**: ${deepDive.flow}
+
+이 구조에서 개발자가 가져갈 설계 원칙은 다음과 같다:
+
+${renderList(deepDive.designLessons)}
+
+## 발표가 바꾼 것과 바꾸지 않은 것
+
+${topic.impact}
+
+${deepDive.change}
+
+다만 다음 문제까지 해결됐다고 확대 해석해서는 안 된다:
+
+${renderList(deepDive.limits)}
+
+## 직접 평가한다면 이렇게 본다
+
+발표사의 종합 점수 하나를 재현하는 것보다, 실제 제품의 입력과 실패 비용에 맞춘 평가가 더 유용하다. 이 주제라면 다음 순서로 확인한다:
+
+${renderList(deepDive.evaluation)}
+
+${deepDive.evaluationNote}
+
+## 내 판단
+
+${deepDive.judgment}
+
+${topic.caveat}
+
+## 검증 범위
+
+이 글은 공식 발표와 공개된 기술 자료를 바탕으로 구조와 제품 영향을 분석했다. 직접 벤치마크나 장기 운영 검증은 수행하지 않았으며, 발표사가 제시한 수치는 해당 기관의 평가 조건에 한정해 해석했다. 업데이트 시점은 2026년 7월 18일이다.
+
+## 함께 읽을 글
+
+${related}
+
+## 공식 1차 출처
+
+- [${topic.sourceLabel}](${topic.sourceUrl}) — ${topic.organization}, ${topic.date}${topic.extraSource ? `\n- [${topic.extraSource.label}](${topic.extraSource.url})` : ''}
+`
+}
+
+const renderPost = (topic) => {
+  const deepDive = aiNewsDeepDives.get(topic.slug)
+  return deepDive ? renderDeepDive(topic, deepDive) : renderBrief(topic)
+}
 
 const validate = () => {
   const seen = new Set()

@@ -4,12 +4,16 @@ export interface Author {
   avatar?: string
 }
 
+export type PostFormat = 'brief' | 'deep-dive'
+
 export interface Post {
   title: string
   date: string
+  updated?: string
   description: string
   category?: string
   tags?: string[]
+  format?: PostFormat
   viewCount?: number
   author?: Author
   slug: string

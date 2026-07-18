@@ -49,7 +49,7 @@ export async function generateMetadata({ params }: Props) {
       description: post.description,
       siteName: 'coyaSONG',
       publishedTime: post.date,
-      authors: ['coyaSONG'],
+      authors: [post.author?.name ?? 'coyaSONG'],
       tags: post.tags,
       images: [ogImage],
     },
@@ -77,10 +77,10 @@ export default async function PostPage({ params }: Props) {
     headline: post.title,
     description: post.description,
     datePublished: post.date,
-    dateModified: post.date,
+    dateModified: post.updated ?? post.date,
     author: {
       '@type': 'Person',
-      name: 'coyaSONG',
+      name: post.author?.name ?? 'coyaSONG',
     },
     publisher: {
       '@type': 'Organization',
@@ -121,9 +121,23 @@ export default async function PostPage({ params }: Props) {
             {post.description}
           </p>
           <div className="flex flex-wrap items-center gap-4 text-sm text-gray-500 dark:text-gray-400 border-b border-gray-200 dark:border-gray-800 pb-8">
+            {post.format && (
+              <span className="rounded-full bg-brand-primary/10 px-3 py-1 font-semibold text-brand-primary dark:text-brand-primary-light">
+                {post.format === 'deep-dive' ? '심층 분석' : '브리핑'}
+              </span>
+            )}
             <time dateTime={post.date}>
               {format(parseISO(post.date), 'PPP', { locale: ko })}
             </time>
+            {post.updated && (
+              <span>
+                업데이트{' '}
+                <time dateTime={post.updated}>
+                  {format(parseISO(post.updated), 'PPP', { locale: ko })}
+                </time>
+              </span>
+            )}
+            {post.author && <span>작성 {post.author.name}</span>}
             <ViewCount slug={post.slug} initialViews={initialViews} />
           </div>
           {post.tags && (
