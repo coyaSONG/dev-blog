@@ -6,7 +6,8 @@ import { aiNewsDeepDives } from './ai-news-deep-dives.mjs'
 
 const root = new URL('..', import.meta.url).pathname
 const postsDir = join(root, 'content', 'posts')
-const expectedLastDate = '2026-07-18'
+const expectedLastDate = '2026-07-19'
+const expectedDeepDiveUpdatedDate = '2026-07-18'
 const monthCounts = new Map()
 const errors = []
 const topicSlugs = new Set(aiNewsTopics.map((topic) => topic.slug))
@@ -69,7 +70,9 @@ for (const topic of aiNewsTopics) {
   if (data.format !== expectedFormat) errors.push(`${topic.slug}: format must be ${expectedFormat}`)
   if (data.author?.name !== 'coyaSONG') errors.push(`${topic.slug}: author must be coyaSONG`)
   if (!content.includes(`](${topic.sourceUrl})`)) errors.push(`${topic.slug}: primary source link is missing`)
-  if (isDeepDive && data.updated !== expectedLastDate) errors.push(`${topic.slug}: deep dive update date is missing`)
+  if (isDeepDive && data.updated !== expectedDeepDiveUpdatedDate) {
+    errors.push(`${topic.slug}: deep dive update date is missing`)
+  }
   if (isDeepDive && wordCount < 550) errors.push(`${topic.slug}: deep dive is too short (${wordCount} words)`)
   if (!isDeepDive && wordCount < 110) errors.push(`${topic.slug}: brief is too short (${wordCount} words)`)
   if (isDeepDive && !content.includes('## 직접 평가한다면 이렇게 본다')) {
