@@ -6,7 +6,7 @@ import { aiNewsDeepDives } from './ai-news-deep-dives.mjs'
 
 const root = new URL('..', import.meta.url).pathname
 const postsDir = join(root, 'content', 'posts')
-const expectedLastDate = '2026-08-02'
+const expectedLastDate = '2026-08-09'
 const expectedDeepDiveUpdatedDate = '2026-07-18'
 const monthCounts = new Map()
 const errors = []
