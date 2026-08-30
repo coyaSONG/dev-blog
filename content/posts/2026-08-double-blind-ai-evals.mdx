@@ -1,0 +1,35 @@
+---
+title: "이중맹검 AI 평가: 기밀 벤치마크와 비공개 모델을 함께 지키다"
+date: "2026-08-27"
+description: "Google DeepMind와 외부 평가 기관들이 모델 가중치와 비공개 평가 문항을 서로 공개하지 않고 보안 엔클레이브 안에서 실행하는 이중맹검 AI 평가 파일럿을 공개했다."
+category: "AI"
+tags: ["Google DeepMind","AI Evaluation","Confidential Computing"]
+format: "brief"
+author:
+  name: "coyaSONG"
+---
+
+> **한 문장 요약**: Google DeepMind와 외부 평가 기관들이 모델 가중치와 비공개 평가 문항을 서로 공개하지 않고 보안 엔클레이브 안에서 실행하는 이중맹검 AI 평가 파일럿을 공개했다.
+
+## 무엇이 발표됐나
+
+Google DeepMind, OpenMined, Singapore AISI, AVERI와 MLCommons는 8월 27일 **Double-Blind Evaluation(DBE)** 파일럿과 기술 보고서를 공개했다. 비공개 Gemini 2.5 Flash Lite를 MLCommons AILuminate의 미사용 예약 문항과 싱가포르 맥락의 유해 콘텐츠 유도 문항으로 평가하면서, Google은 시험 문제를 보지 못하고 평가자는 가중치와 추론 코드를 보지 못하게 했다. “최초”라는 표현은 공동 연구진의 주장이고, 발표의 핵심은 새 성능 점수가 아니라 양측의 기밀 자산을 한 번도 평문으로 교환하지 않은 실행 구조다.
+
+## 두 비밀을 엔클레이브에서 만나는 구조
+
+모델 제공자는 먼저 평가자가 코드를 준비할 수 있도록 모의 인터페이스를 공개한다. 양측은 Google Cloud Confidential Space의 Intel TDX 호스트와 NVIDIA H100 Confidential GPU, PySyft 런타임을 원격 증명해 예상한 소프트웨어 해시가 맞는지 확인한다. 이후 가중치는 암호화된 mTLS 경로로 GPU 메모리에, 문항은 호스트 메모리에 전송된다. 승인된 평가 코드만 격리 환경에서 실행되고 제한된 집계 결과만 반출된 뒤 일회성 환경과 키를 폐기한다.
+
+하드웨어 암호화만으로 충분하지는 않다. 펌웨어부터 컨테이너까지 신뢰 실행 기반을 측정하고, 재현 가능한 빌드의 해시와 비교해야 한다. 비공개 추론·평가 코드에는 네트워크 접근이 없는 허용 목록 함수만 쓰도록 `syft-restrict`가 제한하며 양측이 실행 전 코드를 승인한다. 즉 보안의 단위는 “GPU가 암호화된다”가 아니라 증명, 코드 정책, 출력 제한과 폐기를 잇는 전체 프로토콜이다.
+
+## 개발자에게 왜 중요한가
+
+기존 외부 평가는 문항을 모델 API에 보내 오염 위험을 감수하거나, 평가자에게 가중치를 넘겨 모델 지식재산을 노출하는 선택지에 갇혔다. DBE는 보안·사이버 평가처럼 문항이 오래 비공개여야 하는 영역에서 양측의 신뢰를 계약과 제로 로깅 약속에서 검증 가능한 실행 경계로 옮긴다. 내부 모델 평가 플랫폼도 평가 데이터 버전, 증명서와 실행 이미지 해시, 승인 코드, 반출 가능한 지표를 하나의 감사 기록으로 묶는 설계를 참고할 수 있다.
+
+## 한계와 검증 포인트
+
+이번 결과는 한 모델과 제한된 비공개 문항을 사용한 파일럿이며 상세 점수나 표본 규모를 공개한 일반 성능 검증이 아니다. CPU·GPU 제조사와 클라우드의 신뢰 루트, 신뢰 실행 기반의 취약점과 부채널, 잘못 설계된 집계 출력은 여전히 위험하다. 보고서도 계산 오버헤드보다 법무 협의와 양측 코드 검토가 병목이었다고 적었다. 실무 도입 전에는 증명 실패 시 중단되는지, 이미지가 비트 단위로 재현되는지, 결과 질의를 반복해 문항이나 가중치를 추론할 수 없는지, 같은 평가를 독립 기관이 재실행할 수 있는지를 검증해야 한다.
+
+## 공식 1차 출처
+
+- [Piloting the world's first double-blind AI evaluations](https://deepmind.google/blog/piloting-the-worlds-first-double-blind-ai-evaluations/) — Google DeepMind, 2026-08-27
+- [Double Blind Evals 기술 보고서](https://storage.googleapis.com/deepmind-media/DeepMind.com/Blog/piloting-the-worlds-first-double-blind-ai-evaluations/double-blind-evaluations-technical-report.pdf) — 엔클레이브 구조, 원격 증명과 파일럿 구현
