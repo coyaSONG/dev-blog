@@ -132,7 +132,7 @@ importers:
         version: 19.2.3(@types/react@19.2.4)
       '@vitejs/plugin-react':
         specifier: ^5.1.1
-        version: 5.1.1(vite@7.3.5(@types/node@20.19.25)(jiti@1.21.7)(yaml@2.9.0))
+        version: 5.1.1(vite@7.3.7(@types/node@20.19.25)(jiti@1.21.7)(yaml@2.9.0))
       '@vitest/coverage-v8':
         specifier: ^4.1.9
         version: 4.1.9(vitest@4.1.9)
@@ -161,11 +161,11 @@ importers:
         specifier: ^5
         version: 5.9.3
       vite:
-        specifier: ^7.3.5
-        version: 7.3.5(@types/node@20.19.25)(jiti@1.21.7)(yaml@2.9.0)
+        specifier: ^7.3.7
+        version: 7.3.7(@types/node@20.19.25)(jiti@1.21.7)(yaml@2.9.0)
       vitest:
         specifier: '>=4.1.0'
-        version: 4.1.9(@opentelemetry/api@1.9.0)(@types/node@20.19.25)(@vitest/coverage-v8@4.1.9)(@vitest/ui@4.1.9)(jsdom@27.2.0)(vite@7.3.5(@types/node@20.19.25)(jiti@1.21.7)(yaml@2.9.0))
+        version: 4.1.9(@opentelemetry/api@1.9.0)(@types/node@20.19.25)(@vitest/coverage-v8@4.1.9)(@vitest/ui@4.1.9)(jsdom@27.2.0)(vite@7.3.7(@types/node@20.19.25)(jiti@1.21.7)(yaml@2.9.0))
 
 packages:
 
@@ -3308,8 +3308,8 @@ packages:
   vfile@6.0.3:
     resolution: {integrity: sha512-KzIbH/9tXat2u30jf+smMwFCsno4wHVdNmzFyL+T/L3UGqqk6JKfVqOFOZEpZSHADH1k40ab6NUIXZq422ov3Q==}
 
-  vite@7.3.5:
-    resolution: {integrity: sha512-KuOaNhcnGFN2zIPGA7wRmzF+lJA1sea7rHq17aiJ++9lzY1WWG6Jpwqwe1KNbRVPIqHmr8GLYx7jbrQcN/7/ww==}
+  vite@7.3.7:
+    resolution: {integrity: sha512-AHEzTORMbi7/7aXp7w7KZ5+DCUdSeLsJz0grY8xHpc9DHdYb0vQu6DqJfm2tOw3gDExNgPgnJTXxM6syYFHaCA==}
     engines: {node: ^20.19.0 || >=22.12.0}
     hasBin: true
     peerDependencies:
@@ -4476,7 +4476,7 @@ snapshots:
       next: 16.2.9(@babel/core@7.29.7)(@opentelemetry/api@1.9.0)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
       react: 19.2.0
 
-  '@vitejs/plugin-react@5.1.1(vite@7.3.5(@types/node@20.19.25)(jiti@1.21.7)(yaml@2.9.0))':
+  '@vitejs/plugin-react@5.1.1(vite@7.3.7(@types/node@20.19.25)(jiti@1.21.7)(yaml@2.9.0))':
     dependencies:
       '@babel/core': 7.29.7
       '@babel/plugin-transform-react-jsx-self': 7.27.1(@babel/core@7.29.7)
@@ -4484,7 +4484,7 @@ snapshots:
       '@rolldown/pluginutils': 1.0.0-beta.47
       '@types/babel__core': 7.20.5
       react-refresh: 0.18.0
-      vite: 7.3.5(@types/node@20.19.25)(jiti@1.21.7)(yaml@2.9.0)
+      vite: 7.3.7(@types/node@20.19.25)(jiti@1.21.7)(yaml@2.9.0)
     transitivePeerDependencies:
       - supports-color
 
@@ -4500,7 +4500,7 @@ snapshots:
       obug: 2.1.3
       std-env: 4.1.0
       tinyrainbow: 3.1.0
-      vitest: 4.1.9(@opentelemetry/api@1.9.0)(@types/node@20.19.25)(@vitest/coverage-v8@4.1.9)(@vitest/ui@4.1.9)(jsdom@27.2.0)(vite@7.3.5(@types/node@20.19.25)(jiti@1.21.7)(yaml@2.9.0))
+      vitest: 4.1.9(@opentelemetry/api@1.9.0)(@types/node@20.19.25)(@vitest/coverage-v8@4.1.9)(@vitest/ui@4.1.9)(jsdom@27.2.0)(vite@7.3.7(@types/node@20.19.25)(jiti@1.21.7)(yaml@2.9.0))
 
   '@vitest/expect@4.1.9':
     dependencies:
@@ -4511,13 +4511,13 @@ snapshots:
       chai: 6.2.2
       tinyrainbow: 3.1.0
 
-  '@vitest/mocker@4.1.9(vite@7.3.5(@types/node@20.19.25)(jiti@1.21.7)(yaml@2.9.0))':
+  '@vitest/mocker@4.1.9(vite@7.3.7(@types/node@20.19.25)(jiti@1.21.7)(yaml@2.9.0))':
     dependencies:
       '@vitest/spy': 4.1.9
       estree-walker: 3.0.3
       magic-string: 0.30.21
     optionalDependencies:
-      vite: 7.3.5(@types/node@20.19.25)(jiti@1.21.7)(yaml@2.9.0)
+      vite: 7.3.7(@types/node@20.19.25)(jiti@1.21.7)(yaml@2.9.0)
 
   '@vitest/pretty-format@4.1.9':
     dependencies:
@@ -4546,7 +4546,7 @@ snapshots:
       sirv: 3.0.2
       tinyglobby: 0.2.15
       tinyrainbow: 3.1.0
-      vitest: 4.1.9(@opentelemetry/api@1.9.0)(@types/node@20.19.25)(@vitest/coverage-v8@4.1.9)(@vitest/ui@4.1.9)(jsdom@27.2.0)(vite@7.3.5(@types/node@20.19.25)(jiti@1.21.7)(yaml@2.9.0))
+      vitest: 4.1.9(@opentelemetry/api@1.9.0)(@types/node@20.19.25)(@vitest/coverage-v8@4.1.9)(@vitest/ui@4.1.9)(jsdom@27.2.0)(vite@7.3.7(@types/node@20.19.25)(jiti@1.21.7)(yaml@2.9.0))
 
   '@vitest/utils@4.1.9':
     dependencies:
@@ -7227,7 +7227,7 @@ snapshots:
       '@types/unist': 3.0.3
       vfile-message: 4.0.3
 
-  vite@7.3.5(@types/node@20.19.25)(jiti@1.21.7)(yaml@2.9.0):
+  vite@7.3.7(@types/node@20.19.25)(jiti@1.21.7)(yaml@2.9.0):
     dependencies:
       esbuild: 0.28.1
       fdir: 6.5.0(picomatch@4.0.4)
@@ -7241,10 +7241,10 @@ snapshots:
       jiti: 1.21.7
       yaml: 2.9.0
 
-  vitest@4.1.9(@opentelemetry/api@1.9.0)(@types/node@20.19.25)(@vitest/coverage-v8@4.1.9)(@vitest/ui@4.1.9)(jsdom@27.2.0)(vite@7.3.5(@types/node@20.19.25)(jiti@1.21.7)(yaml@2.9.0)):
+  vitest@4.1.9(@opentelemetry/api@1.9.0)(@types/node@20.19.25)(@vitest/coverage-v8@4.1.9)(@vitest/ui@4.1.9)(jsdom@27.2.0)(vite@7.3.7(@types/node@20.19.25)(jiti@1.21.7)(yaml@2.9.0)):
     dependencies:
       '@vitest/expect': 4.1.9
-      '@vitest/mocker': 4.1.9(vite@7.3.5(@types/node@20.19.25)(jiti@1.21.7)(yaml@2.9.0))
+      '@vitest/mocker': 4.1.9(vite@7.3.7(@types/node@20.19.25)(jiti@1.21.7)(yaml@2.9.0))
       '@vitest/pretty-format': 4.1.9
       '@vitest/runner': 4.1.9
       '@vitest/snapshot': 4.1.9
@@ -7261,7 +7261,7 @@ snapshots:
       tinyexec: 1.2.4
       tinyglobby: 0.2.15
       tinyrainbow: 3.1.0
-      vite: 7.3.5(@types/node@20.19.25)(jiti@1.21.7)(yaml@2.9.0)
+      vite: 7.3.7(@types/node@20.19.25)(jiti@1.21.7)(yaml@2.9.0)
       why-is-node-running: 2.3.0
     optionalDependencies:
       '@opentelemetry/api': 1.9.0
